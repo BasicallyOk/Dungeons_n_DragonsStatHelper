@@ -27,7 +27,6 @@ class player:
             self.human()
 
     def elves(self):
-        print("Elf is being used")
         self.dexterity += 2
         self.size = 'Medium'
         self.speed = 30
@@ -41,7 +40,6 @@ class player:
             self.ability += "\n-Mask of the Wild: You can attempt to hide even when you are only lightly obscured by foliage, heavy rain, falling snow, mist, and other natural phenomena."
 
     def human(self):
-        print('Human is being used')
         self.strength += 1
         self.dexterity += 1
         self.constitution += 1
