@@ -1,6 +1,8 @@
 class player:
     def __init__(self, name, level: int, race, strength: int, dexterity: int, constitution: int, intellect: int, wisdom: int, charisma: int):
         self.speed = 0
+        self.leveling = [0, 2, 4, 6, 8, 11, 14, 17, 20, 24, 28, 32, 36, 41, 46, 51, 56, 62, 68, 74, 80]
+        self.proficiency = self.leveling[self.level - 1]
         self.size = 0
         self.name = name
         self.level = level
@@ -52,4 +54,23 @@ class player:
 
     def showStat(self):
         return (f'level {self.level} {self.name}, {self.subrace} {self.race}-kin\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbilities Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntellect: {self.intellect}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities: {self.ability}')
+
+    def levelUp(self):
+        self.level += 1
+
+    def abilityLevel(self, ability, n):
+        for x in range(n):
+            if ability == 'strength':
+                self.strength += 1
+            if ability == 'dexterity':
+                self.dexterity += 1
+            if ability == 'constitution':
+                self.constitution += 1
+            if ability == 'intellect':
+                self.intellect += 1
+            if ability == 'wisdom':
+                self.wisdom += 1
+            if ability == 'charisma':
+                self.charisma += 1
+            else: print('Please Try Again')
 
