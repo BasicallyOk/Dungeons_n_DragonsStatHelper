@@ -2,14 +2,17 @@ import discord
 from discord.ext import commands
 import time
 import random
+from raceStats import player
 
 TOKEN = ''
 client = commands.Bot(command_prefix = '.')
 adventurers = {}
+finalRole = {}
 rolesDes = open("Roles", "r", encoding='utf8')
-roleList = ['🧙', '🧝', '⚔', '🗡', '🧞', '🎸', '🔮', '🛡', '🪓', '☄', '😇', '🌲', '☯', '🏹', '🃏', '🧠']
+roleList = ['🧙', '⚔', '🗡', '🧞', '🎸', '🔮', '🛡', '🪓', '☄', '😇', '🌲', '☯', '🏹', '🃏', '🧠']
 rolelock = False
 readyNum = 0
+members = {}
 
 @client.event
 async def on_ready():
@@ -23,14 +26,14 @@ async def on_reaction_add(reaction, user):
     if user == client.user:#it wont count itself as an adventurer
         return
     if reaction.emoji == '✅':
-        print(reaction.count)
         if reaction.count == (len(adventurers) + 1) and len(adventurers) != 0:
-            await reaction.message.channel.send("Role Locked, all party members ready to start")
-            print(roleList)
+            await reaction.message.channel.send("Role Locked, all party members ready to start.\nTo set race as well as stats, please send this message: Character Choice: <name> <level> <race>(or subrace if applicable) <strength> <dexterity> <constitution> <intellect> <wisdom> <charisma>")
+            finalRole = adventurers
+            print(finalRole)
             return
     if user.name in adventurers:
         return
-    adventurers[user.name] = reaction.emoji
+    adventurers[str(user.name)] = reaction.emoji
     await reaction.message.channel.send(f'{user.name} joined the party as {reaction.emoji}')
 
 @client.event
@@ -63,7 +66,7 @@ async def roles(ctx):
     await ctx.send(rolesDes.read())
 
 @client.command()
-async def members(ctx):
+async def memberslist(ctx):
     if len(adventurers) == 0:
         await ctx.send("Wow, such an empty party. "
                        "Consider joining by sending .charCreate.")
@@ -100,4 +103,16 @@ async def on_message(message):
             await message.channel.send('Syntax is invalid, try again\n'
                                        'Valid syntax would look like: "dice <dice number> <number of rolls>"')
 
+    if "character choice" in content:
+        items = content.split("-")
+        statindex = items.index("character choice")
+        try:
+            members[message.author.name] = player(items[statindex + 1], int(items[statindex + 2]), items[statindex + 3], int(items[statindex + 4]), int(items[statindex + 5]), int(items[statindex + 6]), int(items[statindex + 7]), int(items[statindex + 8]), int(items[statindex + 9]))
+            await message.channel.send("Character created")
+        except:
+            await message.channel.send("Syntax invalid, please try again.\n Valid Syntax: Character Choice-<name>-<level>-<race>(or subrace if applicable)-<strength>-<dexterity>-<constitution>-<intellect>-<wisdom>-<charisma>")
+
+@client.command()
+async def MyCharacter(ctx):
+    await ctx.send(f"{ctx.author.name}'s {members[ctx.author.name].showStat()}")
 client.run(TOKEN)
