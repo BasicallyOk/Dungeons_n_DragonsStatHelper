@@ -35,19 +35,30 @@ class player:
             self.dwarves()
         if self.race == 'gnome':
             self.gnome()
+		if self.race == 'halfling':
+			self.halfling()
+		#if self.race == 'halfelf':
+			#self.halfelf()
+		if self.race == 'halforc':
+			self.halforc()
+		if self.race == 'tiefling':
+			self.tiefling()
 
     def elves(self):
         self.dexterity += 2
-        self.size = 'Medium'
+        self.size = 'medium'
         self.speed = 30
-        self.abilities = ["Darkvision (60 ft, can't discern colors)", "Keen Senses: Proficiency in Perception", "Fey Ancestry: You have advantage on saving throws against being charmed, and magic can’t put you to sleep.", "Trance: Elves don't sleep, they only meditate for 4 hours, gaining full benefit of an 8-hour sleep.", "Elf Weapon Training: Proficiency with longsword, shortsword, shortbow and long bow."]
+        self.abilities = ["Keen Senses: Proficiency in Perception", "Fey Ancestry: You have advantage on saving throws against being charmed, and magic can’t put you to sleep.", "Trance: Elves don't sleep, they only meditate for 4 hours, gaining full benefit of an 8-hour sleep."]
         if self.subrace == "high":
             self.intellect += 1
-            self.abilities += ["Cantrip: You know one cantrip of your choice from the wizard spell list. Intelligence is your spellcasting ability for it.", "Extra language: You can speak, read, and write one extra language of your choice."]
+            self.abilities += ["Darkvision (60 ft, can't discern colors)", "Cantrip: You know one cantrip of your choice from the wizard spell list. Intelligence is your spellcasting ability for it.", "Extra language: You can speak, read, and write one extra language of your choice.", "Elf Weapon Training: Proficiency with longsword, shortsword, shortbow and long bow."]
         elif self.subrace == "wood":
             self.wisdom += 1
             self.speed = 35
-            self.abilities += ["Mask of the Wild: You can attempt to hide even when you are only lightly obscured by foliage, heavy rain, falling snow, mist, and other natural phenomena."]
+            self.abilities += ["Darkvision (60 ft, can't discern colors)", "Mask of the Wild: You can attempt to hide even when you are only lightly obscured by foliage, heavy rain, falling snow, mist, and other natural phenomena.", "Elf Weapon Training: Proficiency with longsword, shortsword, shortbow and long bow."]
+		elif self.subrace == 'dark':
+			self.charisma += 1
+			self.abilities += ["Superior Darkvision (120ft, can't discern colors)", "Sunlight Sensitivity: You have disadvantage on attack rolls and on Perception checks that rely on sight when you, the target of your attack, or whatever you are trying to perceive is in direct sunlight.", "Drow Magic: You know the dancing lights cantrip. When you reach 3rd level, you can cast the faerie fire spell once per day. When you reach 5th level, you can also cast the darkness spell once per day. Charisma is your spellcasting ability for these spells.", "Drow Weapon Training: You have proficiency with rapiers, shortswords, and hand crossbows."]
         else:
             print('Try again')
 
@@ -58,14 +69,14 @@ class player:
         self.intellect += 1
         self.wisdom += 1
         self.charisma += 1
-        self.size = 'Medium'
+        self.size = 'medium'
         self.speed = 30
         self.abilities = ["Languages: You can speak, read, and write Common and one extra language of your choice. \nHumans typically learn the languages of other peoples they deal with, including obscure dialects. \nThey are fond of sprinkling their speech with words borrowed from other tongues: Orc curses, Elvish musical expressions, Dwarvish military phrases, and so on."]
 
     def dragonborn(self):
         self.strength += 2
         self.speed = 30
-        self.size = 'Medium'
+        self.size = 'medium'
         self.abilities = ["Language: You can speak, read, and write Common and Draconic. Draconic is thought to be one of the oldest languages and is often used in the study of magic. The language sounds harsh to most other creatures and includes numerous hard consonants and sibilants.", "Breath Weapon: You can use your action to exhale destructive energy. Your draconic ancestry determines the size, shape, and damage type of the exhalation. When you use your breath weapon, each creature in the area of the exhalation must make a saving throw, the type of which is determined by your draconic ancestry. The DC for this saving throw equals 8 + your Constitution modifier + your proficiency bonus. A creature takes 2d6 damage on a failed save, and half as much damage on a successful one. The damage increases to 3d6 at 6th level, 4d6 at 11th level, and 5d6 at 16th level. After you use your breath weapon, you can’t use it again until you complete a short or long rest."]
         if self.subrace == "black" or self.subrace == "copper":
             self.abilities += ["Damage resistance to Acid"]
@@ -81,7 +92,7 @@ class player:
     def dwarves(self):
         self.constitution += 2
         self.speed = 25
-        self.size = 'Medium'
+        self.size = 'medium'
         self.abilities = ["Darkvision (60ft range, can't discern colors)",
                         "Dwarven Resilience: You have advantage on saving throws against poison, and you have resistance against poison damage",
                         "Dwarven Combat Training: You have proficiency with the battleaxe, handaxe, light hammer, and warhammer.",
@@ -94,6 +105,9 @@ class player:
         if self.subrace == 'mountain':
             self.strength += 2
             self.abilities += ["Dwarven Armor Training: You have proficiency with light and medium armor."]
+
+	# Note: make changes to the deep gnome subrace, because it is not in the player's handbook,
+	# and add languages into the general abilities, along with darkvision; also, add the forest gnome subrace
 
     def gnome(self):
         self.intellect += 2
@@ -114,7 +128,49 @@ class player:
                             "\n *Fire Starter*. The device produces a miniature flame, which you can use to light a candle, torch, or campfire. Using the device requires your action." \
                             "\n *Music Box*. When opened, this music box plays a single song at a moderate volume. The box stops playing when it reaches the song’s end or when it is closed."
 
-    def showStat(self):
+    def halfling(self):
+		self.dexterity += 2
+		self.size = 'small'
+		self.speed = 25
+		self.abilities = ["\n-Lucky: When you roll a 1 on an attack roll, ability check, or saving throw, you can reroll the die and must use the new roll.",
+						"\n-Bravery: You have advantage on saving throws against being frightened.",
+						"\n-Halfling Nimbleness: You can move through the space of any creature that is of a size larger than yours.",
+						"\n-Languages: You can speak, read, and write Common and Halfling."]
+		if self.subrace == 'lightfoot':
+			self.charisma += 1
+			self.abilities += "\n-Naturally Stealthy: You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."
+		if self.subrace == 'stout':
+			self.constitution += 1
+			self.abilities += "\n-Stout Resilience: You have advantage on saving throws against poison, and you have resistance against poison damage."
+
+	#############################################################
+	# FOR HALF-ELVES
+	# need to find a way to choose 2 ability scores to increase, 
+	# bc they add 2 to charisma and 1 to 2 other ability scores
+	#############################################################
+
+	def halforc(self):
+		self.strength += 2
+		self.constitution += 1
+		self.size = 'medium'
+		self.speed = 30
+		self.abilities = ["\n-Darkvision (60ft range, can't discern colors)",
+						"\n-Menacing: You gain proficiency in the Intimidation skill.",
+						"\n-Relentless Endurance: When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. You can't use this feature again until you finish a long rest.",
+						"\n-Savage Attacks: When you score a critical hit with a melee weapon attack, you can roll one of the weapon's damage dice one additional time and add it to the extra damage of the critical hit.",
+						"\n-Languages: You can speak, read, and write Common and Orc."]
+
+	def tiefling(self):
+		self.intellect += 1
+		self.charisma += 2
+		self.size = 'medium'
+		self.speed = 30
+		self.abilities = ["\n-Darkvision (60ft range, can't discern colors)",
+						"\n-Hellish Resistance: You have resistance to fire damage.",
+						"\n-Infernal Legacy: You know the thaumaturgy cantrip. Once you reach 3rd level, you can cast the hellish rebuke spell once per day as a 2nd-level spell. Once you reach 5th level, you can also cast the darkness spell once per day. Charisma is you spellcasting ability for these spells.",
+						"\n-Languages: You can speak, read, and write Common and Infernal."]
+	
+	def showStat(self):
         return (f'level {self.level} {self.name}, {self.kin}-kin\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbilities Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntellect: {self.intellect}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities:\n{self.abilityString()}')
 
     def abilityString(self):
