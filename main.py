@@ -4,7 +4,7 @@ import time
 import random
 from raceStats import player
 
-TOKEN = 'NzQ3NzM4Mjc5ODkzNTMyNzIz.X0TPig.hzHekOmiu0iSuyAPiq5erf-724o'
+TOKEN = ''
 client = commands.Bot(command_prefix = '.')
 adventurers = {}
 finalRole = {}
