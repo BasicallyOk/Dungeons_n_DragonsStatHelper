@@ -2,10 +2,10 @@ class player:
     def __init__(self, name, level: int, race, strength: int, dexterity: int, constitution: int, intellect: int, wisdom: int, charisma: int):
         self.speed = 0
         self.leveling = [0, 2, 4, 6, 8, 11, 14, 17, 20, 24, 28, 32, 36, 41, 46, 51, 56, 62, 68, 74, 80]
-        self.proficiency = self.leveling[self.level - 1]
         self.size = 0
         self.name = name
         self.level = level
+        self.proficiency = self.leveling[self.level - 1]
         self.strength = strength
         self.dexterity = dexterity
         self.constitution = constitution
@@ -13,6 +13,7 @@ class player:
         self.wisdom = wisdom
         self.charisma = charisma
         self.ability = ""
+        self.kin = race
         raceList = race.lower().split(' ')
         try:
             self.race = raceList[1]
@@ -25,6 +26,10 @@ class player:
             self.elves()
         if self.race == 'human':
             self.human()
+        if self.race == 'dragonborn':
+            self.dragonborn()
+        if self.race == 'dwarf':
+            self.dwarves()
 
     def elves(self):
         self.dexterity += 2
@@ -38,6 +43,8 @@ class player:
             self.wisdom += 1
             self.speed = 35
             self.ability += "\n-Mask of the Wild: You can attempt to hide even when you are only lightly obscured by foliage, heavy rain, falling snow, mist, and other natural phenomena."
+        else:
+            print('Try again')
 
     def human(self):
         self.strength += 1
@@ -48,10 +55,43 @@ class player:
         self.charisma += 1
         self.size = 'Medium'
         self.speed = 30
-        self.ability = "Languages: You can speak, read, and write Common and one extra language of your choice. \nHumans typically learn the languages of other peoples they deal with, including obscure dialects. \nThey are fond of sprinkling their speech with words borrowed from other tongues: Orc curses, Elvish musical expressions, Dwarvish military phrases, and so on."
+        self.ability = "\n-Languages: You can speak, read, and write Common and one extra language of your choice. \nHumans typically learn the languages of other peoples they deal with, including obscure dialects. \nThey are fond of sprinkling their speech with words borrowed from other tongues: Orc curses, Elvish musical expressions, Dwarvish military phrases, and so on."
+
+    def dragonborn(self):
+        self.strength += 2
+        self.speed = 30
+        self.size = 'Medium'
+        self.ability = '\n-Language: You can speak, read, and write Common and Draconic. Draconic is thought to be one of the oldest languages and is often used in the study of magic. The language sounds harsh to most other creatures and includes numerous hard consonants and sibilants.\n-Breath Weapon: You can use your action to exhale destructive energy. Your draconic ancestry determines the size, shape, and damage type of the exhalation. When you use your breath weapon, each creature in the area of the exhalation must make a saving throw, the type of which is determined by your draconic ancestry. The DC for this saving throw equals 8 + your Constitution modifier + your proficiency bonus. A creature takes 2d6 damage on a failed save, and half as much damage on a successful one. The damage increases to 3d6 at 6th level, 4d6 at 11th level, and 5d6 at 16th level. After you use your breath weapon, you can’t use it again until you complete a short or long rest.'
+        if self.subrace == "black" or self.subrace == "copper":
+            self.ability += ("\n-Damage resistance to Acid")
+        if self.subrace == 'blue' or self.subrace == 'bronze':
+            self.ability += ("\n-Damage resistance to Lightning")
+        if self.subrace == 'brass' or self.subrace == 'gold' or self.subrace == 'red':
+            self.ability += ("\n-Damage resistance to Fire")
+        if self.subrace == 'green':
+            self.ability += ("\n-Damage resistance to Poison")
+        if self.subrace == 'silver' or self.subrace == 'white':
+            self.ability += ("\n-Damage resistance to Cold")
+
+    def dwarves(self):
+        self.constitution += 2
+        self.speed = 25
+        self.size = 'Medium'
+        self.ability = "\n-Darkvision (60ft range, can't discern colors)" \
+                       "\n-Dwarven Resilience: You have advantage on saving throws against poison, and you have resistance against poison damage" \
+                       "\n-Dwarven Combat Training: You have proficiency with the battleaxe, handaxe, light hammer, and warhammer." \
+                       "\n-Tool Proficiency: You gain proficiency with the artisan’s tools of your choice: smith’s tools, brewer’s supplies, or mason’s tools." \
+                       "\n-Stonecunning: Whenever you make an Intelligence (**History**) check related to the origin of stonework, you are considered proficient in the History skill and add double your proficiency bonus to the check, instead of your normal proficiency bonus." \
+                       "\n-Languages: You can speak, read, and write Common and Dwarvish. Dwarvish is full of hard consonants and guttural sounds, and those characteristics spill over into whatever other language a dwarf might speak."
+        if self.subrace == "hill":
+            self.wisdom += 1
+            self.ability += "\n-Dwarven Toughness: Your hit point maximum increases by 1, and it increases by 1 every time you gain a level."
+        if self.subrace == 'mountain':
+            self.strength += 2
+            self.ability += "\n-Dwarven Armor Training: You have proficiency with light and medium armor."
 
     def showStat(self):
-        return (f'level {self.level} {self.name}, {self.subrace} {self.race}-kin\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbilities Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntellect: {self.intellect}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities: {self.ability}')
+        return (f'level {self.level} {self.name}, {self.kin}-kin\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbilities Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntellect: {self.intellect}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities: {self.ability}')
 
     def levelUp(self):
         self.level += 1

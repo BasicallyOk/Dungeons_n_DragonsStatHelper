@@ -4,7 +4,7 @@ import time
 import random
 from raceStats import player
 
-TOKEN = ''
+TOKEN = 'NzQ3NzM4Mjc5ODkzNTMyNzIz.X0TPig.hzHekOmiu0iSuyAPiq5erf-724o'
 client = commands.Bot(command_prefix = '.')
 adventurers = {}
 finalRole = {}
@@ -110,7 +110,7 @@ async def on_message(message):
             members[message.author.name] = player(items[statindex + 1], int(items[statindex + 2]), items[statindex + 3], int(items[statindex + 4]), int(items[statindex + 5]), int(items[statindex + 6]), int(items[statindex + 7]), int(items[statindex + 8]), int(items[statindex + 9]))
             await message.channel.send(f"Character created for {message.author.name}")
         except:
-            await message.channel.send("Syntax invalid, please try again.\n Valid Syntax: Character Choice-<name>-<level>-<race>(or subrace if applicable)-<strength>-<dexterity>-<constitution>-<intellect>-<wisdom>-<charisma>")
+            await message.channel.send("Syntax invalid, please try again.\nValid Syntax: Character Choice-<name>-<level>-<race>(or subrace if applicable)-<strength>-<dexterity>-<constitution>-<intellect>-<wisdom>-<charisma>")
 
 @client.command()
 async def MyCharacter(ctx):
