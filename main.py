@@ -107,7 +107,7 @@ async def on_message(message):
         items = content.split("-")
         statindex = items.index("character choice")
         try:
-            members[message.author.name] = player(items[statindex + 1], int(items[statindex + 2]), items[statindex + 3], int(items[statindex + 4]), int(items[statindex + 5]), int(items[statindex + 6]), int(items[statindex + 7]), int(items[statindex + 8]), int(items[statindex + 9]))
+            members[message.author.name] = player(items[statindex + 1], finalRole[message.author], int(items[statindex + 2]), items[statindex + 3], int(items[statindex + 4]), int(items[statindex + 5]), int(items[statindex + 6]), int(items[statindex + 7]), int(items[statindex + 8]), int(items[statindex + 9]))
             await message.channel.send(f"Character created for {message.author.name}")
         except:
             await message.channel.send("Syntax invalid, please try again.\nValid Syntax: Character Choice-<name>-<level>-<race>(or subrace if applicable)-<strength>-<dexterity>-<constitution>-<intellect>-<wisdom>-<charisma>")

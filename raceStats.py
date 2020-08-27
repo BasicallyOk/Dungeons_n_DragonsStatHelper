@@ -1,8 +1,9 @@
 class player:
-    def __init__(self, name, level: int, race, strength: int, dexterity: int, constitution: int, intellect: int, wisdom: int, charisma: int):
+    def __init__(self, name, role , level: int, race, strength: int, dexterity: int, constitution: int, intellect: int, wisdom: int, charisma: int):
         self.speed = 0
         self.leveling = [0, 2, 4, 6, 8, 11, 14, 17, 20, 24, 28, 32, 36, 41, 46, 51, 56, 62, 68, 74, 80]
         self.size = 0
+        self.role = role
         self.name = name
         self.level = level
         self.proficiency = self.leveling[self.level - 1]
