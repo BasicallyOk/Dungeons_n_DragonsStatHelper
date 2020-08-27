@@ -44,7 +44,7 @@ class player:
         if self.subrace == "high":
             self.intellect += 1
             self.abilities += ["Cantrip: You know one cantrip of your choice from the wizard spell list. Intelligence is your spellcasting ability for it.", "Extra language: You can speak, read, and write one extra language of your choice."]
-        if self.subrace == "wood":
+        elif self.subrace == "wood":
             self.wisdom += 1
             self.speed = 35
             self.abilities += ["Mask of the Wild: You can attempt to hide even when you are only lightly obscured by foliage, heavy rain, falling snow, mist, and other natural phenomena."]
