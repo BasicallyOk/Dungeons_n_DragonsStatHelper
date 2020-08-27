@@ -115,7 +115,7 @@ class player:
                             "\n *Music Box*. When opened, this music box plays a single song at a moderate volume. The box stops playing when it reaches the song’s end or when it is closed."
 
     def showStat(self):
-        return (f'level {self.level} {self.name}, {self.kin}-kin\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbilities Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntellect: {self.intellect}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities: {self.abilities}')
+        return (f'level {self.level} {self.name}, {self.kin}-kin\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbilities Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntellect: {self.intellect}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities:\n{self.abilityString()}')
 
     def abilityString(self):
         return '\n'.join(f'-{ability}' for ability in self.abilities)
