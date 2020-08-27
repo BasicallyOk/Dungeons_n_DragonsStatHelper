@@ -5,7 +5,7 @@ class player:
         self.size = 0
         #self.role = role
         self.money = 0
-        self.carryweight
+        self.carryweight = 0
         self.name = name
         self.level = level
         self.proficiency = self.leveling[self.level - 1]
@@ -135,4 +135,13 @@ class player:
             if ability == 'charisma':
                 self.charisma += 1
             else: print('Please Try Again')
+    def addMoney(self, amount):
+        self.money += amount
+        print(f"Player added {amount}")
+        self.carryweight += float(self.money/50)
+        print('Player exceeded amount, deducting')
+        if self.carryweight > self.strength*15:
+            self.money -= (self.carryweight - (self.strength*15))*50
+
+
 
