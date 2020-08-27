@@ -1,3 +1,5 @@
+from weaponStats import gear
+
 class player:
     def __init__(self, name, level: int, race, strength: int, dexterity: int, constitution: int, intellect: int, wisdom: int, charisma: int):
         self.speed = 0
@@ -17,6 +19,7 @@ class player:
         self.charisma = charisma
         self.abilities = []
         self.kin = race
+        self.inventory = {}
         raceList = race.lower().split(' ')
         try:
             self.race = raceList[1]
@@ -138,6 +141,7 @@ class player:
             if ability == 'charisma':
                 self.charisma += 1
             else: print('Please Try Again')
+
     def addMoney(self, amount):
         self.money += amount
         print(f"Player added {amount}")
@@ -145,6 +149,15 @@ class player:
         print('Player exceeded amount, deducting')
         if self.carryweight > self.strength*15:
             self.money -= (self.carryweight - (self.strength*15))*50
+
+    def addInventory(self, item: gear):
+        if item.bought:
+            if self.money < item.price or (self.carryweight + item.weight) > self.strength * 15 :
+                return 'Player lacks money or carryweight'
+            else:
+                self.addMoney(-item.price)
+        self.inventory[item.name] = item
+        return f'Player has successfully added {item.name} to inventory'
 
 
 
