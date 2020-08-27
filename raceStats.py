@@ -58,7 +58,7 @@ class player:
             self.abilities += ["Darkvision (60 ft, can't discern colors)", "Mask of the Wild: You can attempt to hide even when you are only lightly obscured by foliage, heavy rain, falling snow, mist, and other natural phenomena.", "Elf Weapon Training: Proficiency with longsword, shortsword, shortbow and long bow."]
 		elif self.subrace == 'dark':
 			self.charisma += 1
-			self.abilities += ["Superior Darkvision (120ft, can't discern colors)", "Sunlight Sensitivity: You have disadvantage on attack rolls and on Wisdom(**Perception**) checks that rely on sight when you, the target of your attack, or whatever you are trying to perceive is in direct sunlight.", "Drow Magic: You know the dancing lights cantrip. When you reach 3rd level, you can cast the faerie fire spell once per day. When you reach 5th level, you can also cast the darkness spell once per day. Charisma is your spellcasting ability for these spells.", "Drow Weapon Training: You have proficiency with rapiers, shortswords, and hand crossbows."]
+			self.abilities += ["Superior Darkvision (120ft, can't discern colors)", "Sunlight Sensitivity: You have disadvantage on attack rolls and on Wisdom(**Perception**) checks that rely on sight when you, the target of your attack, or whatever you are trying to perceive is in direct sunlight.", "Drow Magic: You know the *dancing lights* cantrip. When you reach 3rd level, you can cast the *faerie fire* spell once per day. When you reach 5th level, you can also cast the *darkness* spell once per day. Charisma is your spellcasting ability for these spells.", "Drow Weapon Training: You have proficiency with rapiers, shortswords, and hand crossbows."]
         else:
             print('Try again')
 
@@ -121,7 +121,7 @@ class player:
                             "\n-Languages: You can speak, read, and write Common, Gnomish, and Undercommon. The svirfneblin dialect is more guttural than surface Gnomish, and most svirfneblin know only a little bit of Common, but those who deal with outsiders (and that includes you as an adventurer) pick up enough Common to get by in other lands."
         if self.subrace == 'rock':
             self.constitution += 1
-            self.ability += "\n-Artificer's Lore: Whenever you make an Intelligence (History) check related to magic items, alchemical objects, or technological devices, you can add twice your proficiency bonus, instead of any proficiency bonus you normally apply." \
+            self.ability += "\n-Artificer's Lore: Whenever you make an Intelligence (**History**) check related to magic items, alchemical objects, or technological devices, you can add twice your proficiency bonus, instead of any proficiency bonus you normally apply." \
                             "\n-Tinker: You have proficiency with artisan’s tools (tinker’s tools). Using those tools, you can spend 1 hour and 10 gp worth of materials to construct a Tiny clockwork device (AC 5, 1 hp). The device ceases to function after 24 hours (unless you spend 1 hour repairing it to keep the device functioning), or when you use your action to dismantle it; at that time, you can reclaim the materials used to create it. You can have up to three such devices active at a time." \
                             "\n When you create a device, choose one of the following options:" \
                             "\n *Clockwork Toy*. This toy is a clockwork animal, monster, or person, such as a frog, mouse, bird, dragon, or soldier. When placed on the ground, the toy moves 5 feet across the ground on each of your turns in a random direction. It makes noises as appropriate to the creature it represents." \
@@ -132,16 +132,16 @@ class player:
 		self.dexterity += 2
 		self.size = 'small'
 		self.speed = 25
-		self.abilities = ["\n-Lucky: When you roll a 1 on an attack roll, ability check, or saving throw, you can reroll the die and must use the new roll.",
-						"\n-Bravery: You have advantage on saving throws against being frightened.",
-						"\n-Halfling Nimbleness: You can move through the space of any creature that is of a size larger than yours.",
-						"\n-Languages: You can speak, read, and write Common and Halfling."]
+		self.abilities = ["Lucky: When you roll a 1 on an attack roll, ability check, or saving throw, you can reroll the die and must use the new roll.",
+						"Bravery: You have advantage on saving throws against being frightened.",
+						"Halfling Nimbleness: You can move through the space of any creature that is of a size larger than yours.",
+						"Languages: You can speak, read, and write Common and Halfling."]
 		if self.subrace == 'lightfoot':
 			self.charisma += 1
-			self.abilities += "\n-Naturally Stealthy: You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."
+			self.abilities += "Naturally Stealthy: You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."
 		if self.subrace == 'stout':
 			self.constitution += 1
-			self.abilities += "\n-Stout Resilience: You have advantage on saving throws against poison, and you have resistance against poison damage."
+			self.abilities += "Stout Resilience: You have advantage on saving throws against poison, and you have resistance against poison damage."
 
 	#############################################################
 	# FOR HALF-ELVES
@@ -154,21 +154,21 @@ class player:
 		self.constitution += 1
 		self.size = 'medium'
 		self.speed = 30
-		self.abilities = ["\n-Darkvision (60ft range, can't discern colors)",
-						"\n-Menacing: You gain proficiency in the Intimidation skill.",
-						"\n-Relentless Endurance: When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. You can't use this feature again until you finish a long rest.",
-						"\n-Savage Attacks: When you score a critical hit with a melee weapon attack, you can roll one of the weapon's damage dice one additional time and add it to the extra damage of the critical hit.",
-						"\n-Languages: You can speak, read, and write Common and Orc."]
+		self.abilities = ["Darkvision (60ft range, can't discern colors)",
+						"Menacing: You gain proficiency in the Intimidation skill.",
+						"Relentless Endurance: When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. You can't use this feature again until you finish a long rest.",
+						"Savage Attacks: When you score a critical hit with a melee weapon attack, you can roll one of the weapon's damage dice one additional time and add it to the extra damage of the critical hit.",
+						"Languages: You can speak, read, and write Common and Orc."]
 
 	def tiefling(self):
 		self.intellect += 1
 		self.charisma += 2
 		self.size = 'medium'
 		self.speed = 30
-		self.abilities = ["\n-Darkvision (60ft range, can't discern colors)",
-						"\n-Hellish Resistance: You have resistance to fire damage.",
-						"\n-Infernal Legacy: You know the thaumaturgy cantrip. Once you reach 3rd level, you can cast the hellish rebuke spell once per day as a 2nd-level spell. Once you reach 5th level, you can also cast the darkness spell once per day. Charisma is you spellcasting ability for these spells.",
-						"\n-Languages: You can speak, read, and write Common and Infernal."]
+		self.abilities = ["Darkvision (60ft range, can't discern colors)",
+						"Hellish Resistance: You have resistance to fire damage.",
+						"Infernal Legacy: You know the *thaumaturgy* cantrip. Once you reach 3rd level, you can cast the *hellish rebuke* spell once per day as a 2nd-level spell. Once you reach 5th level, you can also cast the *darkness* spell once per day. Charisma is you spellcasting ability for these spells.",
+						"Languages: You can speak, read, and write Common and Infernal."]
 	
 	def showStat(self):
         return (f'level {self.level} {self.name}, {self.kin}-kin\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbilities Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntellect: {self.intellect}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities:\n{self.abilityString()}')
