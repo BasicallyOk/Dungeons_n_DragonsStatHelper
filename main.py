@@ -86,22 +86,9 @@ async def on_message(message):
     await client.process_commands(message)
 
     content = message.content.lower()
-    if "dice" in content:
-        contentList = content.split(" ")
-        try:
-            num = contentList[contentList.index('dice') + 1]
-            repeat = contentList[contentList.index('dice') + 2]
-        except IndexError:
-            await message.channel.send('Syntax is invalid, try again\n'
-                                       'Valid syntax would look like: "dice <dice number> <number of rolls>"')
 
-        try:
-            for x in range(int(repeat)):
-                value = random.randint(1, int(num))
-                await message.channel.send(f'Dice Roll: {value}')
-        except ValueError:
-            await message.channel.send('Syntax is invalid, try again\n'
-                                       'Valid syntax would look like: "dice <dice number> <number of rolls>"')
+    if "dice" in content:
+        await roll_dice(message)
 
     if "character choice" in content:
         items = content.split("-")
@@ -115,4 +102,24 @@ async def on_message(message):
 @client.command()
 async def MyCharacter(ctx):
     await ctx.send(f"{ctx.author.name}'s {members[ctx.author.name].showStat()}")
+
+async def roll_dice(message):
+    content = message.content
+    contentList = content.split(" ")
+    try:
+        num = int(contentList[contentList.index('dice') + 1])
+        repeat = int(contentList[contentList.index('dice') + 2])
+    except (IndexError, ValueError):
+        await message.channel.send('Syntax is invalid, try again\n'
+                                   'Valid syntax would look like: "dice <dice number> <number of rolls>"')
+        return
+
+    try:
+        response = '\n'.join(f'Dice Roll: {random.randint(1, num)}' for _ in range(repeat))
+        await message.channel.send(response)
+    except ValueError:
+        await message.channel.send('Syntax is invalid, try again\n'
+                                   'Valid syntax would look like: "dice <dice number> <number of rolls>"')
+
+
 client.run(TOKEN)
