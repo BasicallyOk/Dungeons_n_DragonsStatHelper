@@ -1,9 +1,11 @@
 class player:
-    def __init__(self, name, role , level: int, race, strength: int, dexterity: int, constitution: int, intellect: int, wisdom: int, charisma: int):
+    def __init__(self, name, level: int, race, strength: int, dexterity: int, constitution: int, intellect: int, wisdom: int, charisma: int):
         self.speed = 0
         self.leveling = [0, 2, 4, 6, 8, 11, 14, 17, 20, 24, 28, 32, 36, 41, 46, 51, 56, 62, 68, 74, 80]
         self.size = 0
-        self.role = role
+        #self.role = role
+        self.money = 0
+        self.carryweight
         self.name = name
         self.level = level
         self.proficiency = self.leveling[self.level - 1]
@@ -31,6 +33,8 @@ class player:
             self.dragonborn()
         if self.race == 'dwarf':
             self.dwarves()
+        if self.race == 'gnome':
+            self.gnome()
 
     def elves(self):
         self.dexterity += 2
@@ -90,6 +94,25 @@ class player:
         if self.subrace == 'mountain':
             self.strength += 2
             self.abilities += ["Dwarven Armor Training: You have proficiency with light and medium armor."]
+
+    def gnome(self):
+        self.intellect += 2
+        self.size = 'small'
+        self.speed = 25
+        self.ability = "\n-Gnome Cunning: You have advantage on all Intelligence, Wisdom, and Charisma saving throws against magic."
+        if self.subrace == 'deep':
+            self.dexterity += 1
+            self.ability += "\n-Superior Darkvision (120ft, can't discern color)" \
+                            "\n-Stone Camouflage: You have advantage on Dexterity (Stealth) checks to hide in rocky terrain." \
+                            "\n-Languages: You can speak, read, and write Common, Gnomish, and Undercommon. The svirfneblin dialect is more guttural than surface Gnomish, and most svirfneblin know only a little bit of Common, but those who deal with outsiders (and that includes you as an adventurer) pick up enough Common to get by in other lands."
+        if self.subrace == 'rock':
+            self.constitution += 1
+            self.ability += "\n-Artificer's Lore: Whenever you make an Intelligence (History) check related to magic items, alchemical objects, or technological devices, you can add twice your proficiency bonus, instead of any proficiency bonus you normally apply." \
+                            "\n-Tinker: You have proficiency with artisan’s tools (tinker’s tools). Using those tools, you can spend 1 hour and 10 gp worth of materials to construct a Tiny clockwork device (AC 5, 1 hp). The device ceases to function after 24 hours (unless you spend 1 hour repairing it to keep the device functioning), or when you use your action to dismantle it; at that time, you can reclaim the materials used to create it. You can have up to three such devices active at a time." \
+                            "\n When you create a device, choose one of the following options:" \
+                            "\n *Clockwork Toy*. This toy is a clockwork animal, monster, or person, such as a frog, mouse, bird, dragon, or soldier. When placed on the ground, the toy moves 5 feet across the ground on each of your turns in a random direction. It makes noises as appropriate to the creature it represents." \
+                            "\n *Fire Starter*. The device produces a miniature flame, which you can use to light a candle, torch, or campfire. Using the device requires your action." \
+                            "\n *Music Box*. When opened, this music box plays a single song at a moderate volume. The box stops playing when it reaches the song’s end or when it is closed."
 
     def showStat(self):
         return (f'level {self.level} {self.name}, {self.kin}-kin\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbilities Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntellect: {self.intellect}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities: {self.abilities}')
