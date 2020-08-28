@@ -35,7 +35,7 @@ class towns:
         self.shops['Jeweler'].append(stock)
         stock = {}
 
-        for j in range(6):
+        for j in range(12):
             stock[self.townInfo.cell(15 + j, 9).value] = self.townInfo.cell(15 + j, 10).value
         self.shops['Alchemist'].append(stock)
         stock = {}
@@ -52,12 +52,18 @@ class towns:
         #print(self.shops['Blacksmith'][8])
 
     def viewAllShops(self):
+        stuff = 'Inhabitants:\n'
         for shops in self.shops:
-            return(f"{shops}: {self.shops[shops][7]}run by {self.shops[shops][0]} {self.shops[shops][1]}, a {self.shops[shops][4]} {self.shops[shops][3]} {self.shops[shops][2]}. Traits: {self.shops[shops][5]}, {self.shops[shops][6]}")
+            stuff+=(f"{shops}: {self.shops[shops][7]}run by {self.shops[shops][0]} {self.shops[shops][1]}, a {self.shops[shops][4]} {self.shops[shops][3]} {self.shops[shops][2]}. Traits: {self.shops[shops][5]}, {self.shops[shops][6]}\n")
+
+        return stuff
 
     def viewStocks(self, shop):
+        stuff = ''
         for items in self.shops[shop][8]:
-            print(str(items) + ': ' + str(self.shops[shop][8][items]))
+            stuff+= (str(items) + ': ' + str(self.shops[shop][8][items]) + '\n')
+        return stuff
+
 if __name__ == "__main__":
     town = towns()
     town.viewStocks('Enchanter')

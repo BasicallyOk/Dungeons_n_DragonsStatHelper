@@ -103,6 +103,7 @@ async def on_message(message):
 async def MyCharacter(ctx):
     await ctx.send(f"{ctx.author.name}'s {members[ctx.author.name].showStat()}")
 
+"""
 @client.command()
 async def roll_dice(message):
     content = message.content
@@ -124,12 +125,17 @@ async def roll_dice(message):
     except ValueError:
         await message.channel.send('Syntax is invalid, try again\n'
                                    'Valid syntax would look like: "dice <dice number> <number of rolls>"')
+"""
 
 @client.command()
-async def town(message):
+async def viewTownStock(ctx):
     shops = ['Blacksmith', 'Enchanter', 'Magic Weps', 'Jeweler', 'Alchemist']
     emojis = ['🔨', '🔮', '⚔', '💎', '👨‍🔬']
-    message.channel.send(town.viewStocks(select_one_from_list(message, message.author, shops, emojis)))
+    await ctx.send(town.viewStocks(await select_one_from_list(ctx, ctx.message.author, shops, emojis)))
+
+@client.command()
+async def viewTownFolks(ctx):
+    await ctx.send(town.viewAllShops())
 
 async def select_one_from_list(messageable, author, lst, emojis=None):
     """
@@ -173,7 +179,7 @@ async def select_one_from_list(messageable, author, lst, emojis=None):
     return selected
 
 
-def select_multiple_from_list(messageable, author, lst, emojis=None):
+async def select_multiple_from_list(messageable, author, lst, emojis=None):
     """
     Lets a discord user select multiple items from a list using reactions.
     Returns the selected items.
