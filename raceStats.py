@@ -35,14 +35,14 @@ class player:
             self.dwarves()
         if self.race == 'gnome':
             self.gnome()
-		if self.race == 'halfling':
-			self.halfling()
-		#if self.race == 'halfelf':
-			#self.halfelf()
-		if self.race == 'halforc':
-			self.halforc()
-		if self.race == 'tiefling':
-			self.tiefling()
+        if self.race == 'halfling':
+                self.halfling()
+        #if self.race == 'halfelf':
+                #self.halfelf()
+        if self.race == 'halforc':
+                self.halforc()
+        if self.race == 'tiefling':
+                self.tiefling()
 
     def elves(self):
         self.dexterity += 2
@@ -56,9 +56,9 @@ class player:
             self.wisdom += 1
             self.speed = 35
             self.abilities += ["Darkvision (60 ft, can't discern colors)", "Mask of the Wild: You can attempt to hide even when you are only lightly obscured by foliage, heavy rain, falling snow, mist, and other natural phenomena.", "Elf Weapon Training: Proficiency with longsword, shortsword, shortbow and long bow."]
-		elif self.subrace == 'dark':
-			self.charisma += 1
-			self.abilities += ["Superior Darkvision (120ft, can't discern colors)", "Sunlight Sensitivity: You have disadvantage on attack rolls and on Wisdom(**Perception**) checks that rely on sight when you, the target of your attack, or whatever you are trying to perceive is in direct sunlight.", "Drow Magic: You know the *dancing lights* cantrip. When you reach 3rd level, you can cast the *faerie fire* spell once per day. When you reach 5th level, you can also cast the *darkness* spell once per day. Charisma is your spellcasting ability for these spells.", "Drow Weapon Training: You have proficiency with rapiers, shortswords, and hand crossbows."]
+        elif self.subrace == 'dark':
+            self.charisma += 1
+            self.abilities += ["Superior Darkvision (120ft, can't discern colors)", "Sunlight Sensitivity: You have disadvantage on attack rolls and on Wisdom(**Perception**) checks that rely on sight when you, the target of your attack, or whatever you are trying to perceive is in direct sunlight.", "Drow Magic: You know the *dancing lights* cantrip. When you reach 3rd level, you can cast the *faerie fire* spell once per day. When you reach 5th level, you can also cast the *darkness* spell once per day. Charisma is your spellcasting ability for these spells.", "Drow Weapon Training: You have proficiency with rapiers, shortswords, and hand crossbows."]
         else:
             print('Try again')
 
@@ -106,8 +106,8 @@ class player:
             self.strength += 2
             self.abilities += ["Dwarven Armor Training: You have proficiency with light and medium armor."]
 
-	# Note: make changes to the deep gnome subrace, because it is not in the player's handbook,
-	# and add languages into the general abilities, along with darkvision; also, add the forest gnome subrace
+        # Note: make changes to the deep gnome subrace, because it is not in the player's handbook,
+        # and add languages into the general abilities, along with darkvision; also, add the forest gnome subrace
 
     def gnome(self):
         self.intellect += 2
@@ -129,48 +129,48 @@ class player:
                             "\n *Music Box*. When opened, this music box plays a single song at a moderate volume. The box stops playing when it reaches the song’s end or when it is closed."
 
     def halfling(self):
-		self.dexterity += 2
-		self.size = 'small'
-		self.speed = 25
-		self.abilities = ["Lucky: When you roll a 1 on an attack roll, ability check, or saving throw, you can reroll the die and must use the new roll.",
-						"Bravery: You have advantage on saving throws against being frightened.",
-						"Halfling Nimbleness: You can move through the space of any creature that is of a size larger than yours.",
-						"Languages: You can speak, read, and write Common and Halfling."]
-		if self.subrace == 'lightfoot':
-			self.charisma += 1
-			self.abilities += "Naturally Stealthy: You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."
-		if self.subrace == 'stout':
-			self.constitution += 1
-			self.abilities += "Stout Resilience: You have advantage on saving throws against poison, and you have resistance against poison damage."
+        self.dexterity += 2
+        self.size = 'small'
+        self.speed = 25
+        self.abilities = ["Lucky: When you roll a 1 on an attack roll, ability check, or saving throw, you can reroll the die and must use the new roll.",
+                                        "Bravery: You have advantage on saving throws against being frightened.",
+                                        "Halfling Nimbleness: You can move through the space of any creature that is of a size larger than yours.",
+                                        "Languages: You can speak, read, and write Common and Halfling."]
+        if self.subrace == 'lightfoot':
+            self.charisma += 1
+            self.abilities += "Naturally Stealthy: You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."
+        if self.subrace == 'stout':
+            self.constitution += 1
+            self.abilities += "Stout Resilience: You have advantage on saving throws against poison, and you have resistance against poison damage."
 
-	#############################################################
-	# FOR HALF-ELVES
-	# need to find a way to choose 2 ability scores to increase, 
-	# bc they add 2 to charisma and 1 to 2 other ability scores
-	#############################################################
+    #############################################################
+    # FOR HALF-ELVES
+    # need to find a way to choose 2 ability scores to increase, 
+    # bc they add 2 to charisma and 1 to 2 other ability scores
+    #############################################################
 
-	def halforc(self):
-		self.strength += 2
-		self.constitution += 1
-		self.size = 'medium'
-		self.speed = 30
-		self.abilities = ["Darkvision (60ft range, can't discern colors)",
-						"Menacing: You gain proficiency in the Intimidation skill.",
-						"Relentless Endurance: When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. You can't use this feature again until you finish a long rest.",
-						"Savage Attacks: When you score a critical hit with a melee weapon attack, you can roll one of the weapon's damage dice one additional time and add it to the extra damage of the critical hit.",
-						"Languages: You can speak, read, and write Common and Orc."]
+    def halforc(self):
+        self.strength += 2
+        self.constitution += 1
+        self.size = 'medium'
+        self.speed = 30
+        self.abilities = ["Darkvision (60ft range, can't discern colors)",
+                                        "Menacing: You gain proficiency in the Intimidation skill.",
+                                        "Relentless Endurance: When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. You can't use this feature again until you finish a long rest.",
+                                        "Savage Attacks: When you score a critical hit with a melee weapon attack, you can roll one of the weapon's damage dice one additional time and add it to the extra damage of the critical hit.",
+                                        "Languages: You can speak, read, and write Common and Orc."]
 
-	def tiefling(self):
-		self.intellect += 1
-		self.charisma += 2
-		self.size = 'medium'
-		self.speed = 30
-		self.abilities = ["Darkvision (60ft range, can't discern colors)",
-						"Hellish Resistance: You have resistance to fire damage.",
-						"Infernal Legacy: You know the *thaumaturgy* cantrip. Once you reach 3rd level, you can cast the *hellish rebuke* spell once per day as a 2nd-level spell. Once you reach 5th level, you can also cast the *darkness* spell once per day. Charisma is you spellcasting ability for these spells.",
-						"Languages: You can speak, read, and write Common and Infernal."]
-	
-	def showStat(self):
+    def tiefling(self):
+        self.intellect += 1
+        self.charisma += 2
+        self.size = 'medium'
+        self.speed = 30
+        self.abilities = ["Darkvision (60ft range, can't discern colors)",
+                                        "Hellish Resistance: You have resistance to fire damage.",
+                                        "Infernal Legacy: You know the *thaumaturgy* cantrip. Once you reach 3rd level, you can cast the *hellish rebuke* spell once per day as a 2nd-level spell. Once you reach 5th level, you can also cast the *darkness* spell once per day. Charisma is you spellcasting ability for these spells.",
+                                        "Languages: You can speak, read, and write Common and Infernal."]
+
+    def showStat(self):
         return (f'level {self.level} {self.name}, {self.kin}-kin\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbilities Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntellect: {self.intellect}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities:\n{self.abilityString()}')
 
     def abilityString(self):
