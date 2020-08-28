@@ -109,6 +109,9 @@ async def roll_dice(message):
     try:
         num = int(contentList[contentList.index('dice') + 1])
         repeat = int(contentList[contentList.index('dice') + 2])
+
+        if repeat > 25:
+            raise ValueError
     except (IndexError, ValueError):
         await message.channel.send('Syntax is invalid, try again\n'
                                    'Valid syntax would look like: "dice <dice number> <number of rolls>"')
