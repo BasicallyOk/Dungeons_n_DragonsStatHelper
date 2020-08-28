@@ -122,4 +122,95 @@ async def roll_dice(message):
                                    'Valid syntax would look like: "dice <dice number> <number of rolls>"')
 
 
+async def select_one_from_list(messageable, author, lst, emojis=None):
+    """
+    Lets a discord user select an item from a list using reactions.
+    Returns the selected item.
+    Can raise ValueError and asyncio.TimeoutError.
+    """
+    if emojis is None:
+        emojis = ['0️⃣',
+            '1️⃣',
+            '2️⃣',
+            '3️⃣',
+            '4️⃣',
+            '5️⃣',
+            '6️⃣',
+            '7️⃣',
+            '8️⃣',
+            '9️⃣']
+        emojis = emojis[:len(lst)]
+
+    if len(lst) != len(emojis):
+        raise ValueError(f'Lengths of lst and emojis are not equal ({len(lst)} != {len(emojis)})')
+
+    # concatenate each line into a single message before sending
+    messages = []
+    for emoji, item in zip(emojis, lst):
+        messages.append(f'{emoji} {item}')
+    selection_message = await messageable.send('\n'.join(messages))
+
+    # react with one emoji for each item
+    for emoji in emojis:
+        await selection_message.add_reaction(emoji)
+
+    # wait for confirmation from author
+    def check(reaction, user):
+        return user == author and reaction.message.id == selection_message.id and str(reaction.emoji) in emojis
+
+    reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
+
+    selected = lst[emojis.index(str(reaction.emoji))]
+    return selected
+
+
+async def select_multiple_from_list(messageable, author, lst, emojis=None):
+    """
+    Lets a discord user select multiple items from a list using reactions.
+    Returns the selected items.
+    Can raise ValueError and asyncio.TimeoutError.
+    """
+    if emojis is None:
+        emojis = ['0️⃣',
+            '1️⃣',
+            '2️⃣',
+            '3️⃣',
+            '4️⃣',
+            '5️⃣',
+            '6️⃣',
+            '7️⃣',
+            '8️⃣',
+            '9️⃣']
+        emojis = emojis[:len(lst)]
+
+    if len(lst) != len(emojis):
+        raise ValueError(f'Lengths of lst and emojis are not equal ({len(lst)} != {len(emojis)})')
+
+    # concatenate each line into a single message before sending
+    messages = []
+    for emoji, item in zip(emojis, lst):
+        messages.append(f'{emoji} {item}')
+    selection_message = await messageable.send('\n'.join(messages))
+
+    # react with one emoji for each item
+    for emoji in emojis:
+        await selection_message.add_reaction(emoji)
+
+    await selection_message.add_reaction('✅')
+
+    # wait for confirmation from author
+    def check(reaction, user):
+        return user == author and reaction.message.id == selection_message.id and str(reaction.emoji) == '✅'
+
+    reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
+
+    selected = []
+    for react in reaction.message.reactions:
+        if str(react.emoji) in emojis:
+            if author in await react.users().flatten():
+                selected.append( lst[emojis.index(str(react.emoji))] )
+
+    return selected
+
+
 client.run(TOKEN)
