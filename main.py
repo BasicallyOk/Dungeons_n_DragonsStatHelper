@@ -3,6 +3,7 @@ from discord.ext import commands
 import time
 import random
 from raceStats import player
+import xlrd
 
 TOKEN = ''
 client = commands.Bot(command_prefix = '.')
