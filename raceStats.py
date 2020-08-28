@@ -30,7 +30,7 @@ class Player:
             setattr(self, name, getattr(self, name) + change)
 
     def showStat(self):
-        return (f'level {self.level} {self.name}, {self.race=}\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbility Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntelligence: {self.intelligence}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities:\n{self.abilityString()}')
+        return (f'level {self.level} {self.name}, race: {self.race}\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbility Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntelligence: {self.intelligence}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities:\n{self.abilityString()}')
 
     def abilityString(self):
         return '\n'.join(f'-{ability}' for ability in self.abilities)

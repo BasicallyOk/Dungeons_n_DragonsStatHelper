@@ -1,4 +1,13 @@
-class Elf:
+class Race:
+    subrace = None
+
+    def __str__(self):
+        if self.subrace is None:
+            return f'{type(self).__name__}'
+        else:
+            return f'{type(self).__name__} - {self.subrace}'
+
+class Elf(Race):
     ability_score_changes = {
         'strength': 0,
         'dexterity': 2,
@@ -33,7 +42,7 @@ class Elf:
             raise ValueError(f'subrace {subrace} is not valid')
 
 
-class Human:
+class Human(Race):
     ability_score_changes = {
         'strength': 1,
         'dexterity': 1,
@@ -48,7 +57,7 @@ class Human:
     abilities = ["Languages: You can speak, read, and write Common and one extra language of your choice. \nHumans typically learn the languages of other peoples they deal with, including obscure dialects. \nThey are fond of sprinkling their speech with words borrowed from other tongues: Orc curses, Elvish musical expressions, Dwarvish military phrases, and so on."]
 
 
-class Dragonborn:
+class Dragonborn(Race):
     ability_score_changes = {
         'strength': 2,
         'dexterity': 0,
@@ -86,7 +95,7 @@ class Dragonborn:
             self.abilities += ["Damage resistance to Cold"]
 
 
-class Dwarf:
+class Dwarf(Race):
     ability_score_changes = {
         'strength': 0,
         'dexterity': 0,
@@ -121,7 +130,7 @@ class Dwarf:
             self.abilities += ["Dwarven Armor Training: You have proficiency with light and medium armor."]
 
 
-class Gnome:
+class Gnome(Race):
     ability_score_changes = {
         'strength': 0,
         'dexterity': 0,
@@ -158,7 +167,7 @@ class Gnome:
                             "\n *Music Box*. When opened, this music box plays a single song at a moderate volume. The box stops playing when it reaches the song’s end or when it is closed."]
 
 
-class Halfling:
+class Halfling(Race):
     ability_score_changes = {
         'strength': 0,
         'dexterity': 2,
@@ -191,7 +200,7 @@ class Halfling:
             self.abilities += ["Stout Resilience: You have advantage on saving throws against poison, and you have resistance against poison damage."]
 
 
-class HalfOrc:
+class HalfOrc(Race):
     ability_score_changes = {
         'strength': 2,
         'dexterity': 0,
@@ -210,7 +219,7 @@ class HalfOrc:
                                         "Languages: You can speak, read, and write Common and Orc."]
 
 
-class Tiefling:
+class Tiefling(Race):
     ability_score_changes = {
         'strength': 0,
         'dexterity': 0,
