@@ -113,20 +113,20 @@ class player:
         self.intellect += 2
         self.size = 'small'
         self.speed = 25
-        self.ability = "\n-Gnome Cunning: You have advantage on all Intelligence, Wisdom, and Charisma saving throws against magic."
+        self.abilities = ["Gnome Cunning: You have advantage on all Intelligence, Wisdom, and Charisma saving throws against magic."]
         if self.subrace == 'deep':
             self.dexterity += 1
-            self.ability += "\n-Superior Darkvision (120ft, can't discern color)" \
-                            "\n-Stone Camouflage: You have advantage on Dexterity (Stealth) checks to hide in rocky terrain." \
-                            "\n-Languages: You can speak, read, and write Common, Gnomish, and Undercommon. The svirfneblin dialect is more guttural than surface Gnomish, and most svirfneblin know only a little bit of Common, but those who deal with outsiders (and that includes you as an adventurer) pick up enough Common to get by in other lands."
+            self.abilities += ["Superior Darkvision (120ft, can't discern color)",
+                            "Stone Camouflage: You have advantage on Dexterity (Stealth) checks to hide in rocky terrain.",
+                            "Languages: You can speak, read, and write Common, Gnomish, and Undercommon. The svirfneblin dialect is more guttural than surface Gnomish, and most svirfneblin know only a little bit of Common, but those who deal with outsiders (and that includes you as an adventurer) pick up enough Common to get by in other lands."]
         if self.subrace == 'rock':
             self.constitution += 1
-            self.ability += "\n-Artificer's Lore: Whenever you make an Intelligence (**History**) check related to magic items, alchemical objects, or technological devices, you can add twice your proficiency bonus, instead of any proficiency bonus you normally apply." \
-                            "\n-Tinker: You have proficiency with artisan’s tools (tinker’s tools). Using those tools, you can spend 1 hour and 10 gp worth of materials to construct a Tiny clockwork device (AC 5, 1 hp). The device ceases to function after 24 hours (unless you spend 1 hour repairing it to keep the device functioning), or when you use your action to dismantle it; at that time, you can reclaim the materials used to create it. You can have up to three such devices active at a time." \
+            self.abilities += ["Artificer's Lore: Whenever you make an Intelligence (**History**) check related to magic items, alchemical objects, or technological devices, you can add twice your proficiency bonus, instead of any proficiency bonus you normally apply.",
+                            "Tinker: You have proficiency with artisan’s tools (tinker’s tools). Using those tools, you can spend 1 hour and 10 gp worth of materials to construct a Tiny clockwork device (AC 5, 1 hp). The device ceases to function after 24 hours (unless you spend 1 hour repairing it to keep the device functioning), or when you use your action to dismantle it; at that time, you can reclaim the materials used to create it. You can have up to three such devices active at a time." \
                             "\n When you create a device, choose one of the following options:" \
                             "\n *Clockwork Toy*. This toy is a clockwork animal, monster, or person, such as a frog, mouse, bird, dragon, or soldier. When placed on the ground, the toy moves 5 feet across the ground on each of your turns in a random direction. It makes noises as appropriate to the creature it represents." \
                             "\n *Fire Starter*. The device produces a miniature flame, which you can use to light a candle, torch, or campfire. Using the device requires your action." \
-                            "\n *Music Box*. When opened, this music box plays a single song at a moderate volume. The box stops playing when it reaches the song’s end or when it is closed."
+                            "\n *Music Box*. When opened, this music box plays a single song at a moderate volume. The box stops playing when it reaches the song’s end or when it is closed."]
 
     def halfling(self):
         self.dexterity += 2
@@ -138,10 +138,10 @@ class player:
                                         "Languages: You can speak, read, and write Common and Halfling."]
         if self.subrace == 'lightfoot':
             self.charisma += 1
-            self.abilities += "Naturally Stealthy: You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."
+            self.abilities += ["Naturally Stealthy: You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."]
         if self.subrace == 'stout':
             self.constitution += 1
-            self.abilities += "Stout Resilience: You have advantage on saving throws against poison, and you have resistance against poison damage."
+            self.abilities += ["Stout Resilience: You have advantage on saving throws against poison, and you have resistance against poison damage."]
 
     #############################################################
     # FOR HALF-ELVES
