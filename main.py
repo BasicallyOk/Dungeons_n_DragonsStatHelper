@@ -1,9 +1,8 @@
 import discord
 from discord.ext import commands
-import time
 import random
 from raceStats import player
-import xlrd
+from randomTowns import town
 
 TOKEN = ''
 client = commands.Bot(command_prefix = '.')
@@ -104,6 +103,7 @@ async def on_message(message):
 async def MyCharacter(ctx):
     await ctx.send(f"{ctx.author.name}'s {members[ctx.author.name].showStat()}")
 
+@client.command()
 async def roll_dice(message):
     content = message.content
     contentList = content.split(" ")
@@ -125,6 +125,11 @@ async def roll_dice(message):
         await message.channel.send('Syntax is invalid, try again\n'
                                    'Valid syntax would look like: "dice <dice number> <number of rolls>"')
 
+@client.command()
+async def town(message):
+    shops = ['Blacksmith', 'Enchanter', 'Magic Weps', 'Jeweler', 'Alchemist']
+    emojis = ['🔨', '🔮', '⚔', '💎', '👨‍🔬']
+    message.channel.send(town.viewStocks(select_one_from_list(message, message.author, shops, emojis)))
 
 async def select_one_from_list(messageable, author, lst, emojis=None):
     """
@@ -168,7 +173,7 @@ async def select_one_from_list(messageable, author, lst, emojis=None):
     return selected
 
 
-async def select_multiple_from_list(messageable, author, lst, emojis=None):
+def select_multiple_from_list(messageable, author, lst, emojis=None):
     """
     Lets a discord user select multiple items from a list using reactions.
     Returns the selected items.
