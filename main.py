@@ -1,3 +1,4 @@
+import os
 import discord
 from discord.ext import commands
 import time
@@ -5,7 +6,7 @@ import random
 from raceStats import Player
 import races
 
-TOKEN = ''
+TOKEN = os.environ['DISCORD_TOKEN']
 client = commands.Bot(command_prefix = '.')
 adventurers = {}
 finalRole = {}
