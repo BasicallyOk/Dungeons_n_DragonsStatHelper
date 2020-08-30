@@ -235,3 +235,7 @@ class Tiefling(Race):
                                         "Hellish Resistance: You have resistance to fire damage.",
                                         "Infernal Legacy: You know the *thaumaturgy* cantrip. Once you reach 3rd level, you can cast the *hellish rebuke* spell once per day as a 2nd-level spell. Once you reach 5th level, you can also cast the *darkness* spell once per day. Charisma is you spellcasting ability for these spells.",
                                         "Languages: You can speak, read, and write Common and Infernal."]
+
+
+ALL_RACES = [Elf, Human, Dragonborn, Dwarf, Gnome,
+                Halfling, HalfOrc, Tiefling]

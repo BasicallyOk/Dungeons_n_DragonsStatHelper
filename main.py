@@ -169,26 +169,18 @@ async def select_one_from_list(messageable, author, lst, emojis=None):
 
 @client.command()
 async def test(ctx):
-    race_strs = ['elf', 'human', 'dragonborn', 'dwarf', 'gnome', 'halfling', 'halforc', 'tiefling']
+    race_names = [cls.__name__ for cls in races.ALL_RACES]
+    race_name_to_cls = {name: cls for name, cls in zip(race_names, races.ALL_RACES)}
+    print(race_names)
 
-    race_str = await select_one_from_list(ctx, ctx.message.author, race_strs)
-    race_cls = {
-        'elf': races.Elf,
-        'human': races.Human,
-        'dragonborn': races.Dragonborn,
-        'dwarf': races.Dwarf,
-        'gnome': races.Gnome,
-        'halfling': races.Halfling,
-        'halforc': races.HalfOrc,
-        'tiefling': races.Tiefling
-    }[race_str]
-
+    race_name = await select_one_from_list(ctx, ctx.message.author, race_names)
+    race_cls = race_name_to_cls[race_name]
     # get subraces if possible
     try:
         subrace = await select_one_from_list(ctx, ctx.message.author, getattr(race_cls, 'subraces'))
     except AttributeError:
         subrace = ""
-    race = await make_race(ctx, race_str, subrace)
+    race = await make_race(ctx, race_cls, subrace)
 
     player = Player('luk', 0, race, 0, 0, 0, 0, 0, 0)
     print(player.showStat())
@@ -243,23 +235,23 @@ async def select_multiple_from_list(messageable, author, lst, emojis=None):
     return selected
 
 
-async def make_race(ctx, race: str, subrace: str = ""):
-    if race == 'elf':
+async def make_race(ctx, race_cls, subrace: str = ""):
+    if race_cls == races.Elf:
         return races.Elf(subrace)
-    if race == 'human':
+    if race_cls == races.Human:
         return races.Human()
-    if race == 'dragonborn':
+    if race_cls == races.Dragonborn:
         return races.Dragonborn(subrace)
-    if race == 'dwarf':
+    if race_cls == races.Dwarf:
         return races.Dwarf(subrace)
-    if race == 'gnome':
+    if race_cls == races.Gnome:
         # you've been gnomed
         return races.Gnome(subrace)
-    if race == 'halfling':
+    if race_cls == races.Halfling:
         return races.Halfling(subrace)
-    if race == 'halforc':
+    if race_cls == races.HalfOrc:
         return races.HalfOrc()
-    if race == 'tiefling':
+    if race_cls == races.Tiefling:
         return races.Tiefling()
 
     raise ValueError(f'race {race} does not exist')
