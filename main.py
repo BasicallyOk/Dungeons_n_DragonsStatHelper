@@ -90,9 +90,6 @@ async def on_message(message):
 
     content = message.content.lower()
 
-    if "dice" in content:
-        await roll_dice(message)
-
     if "character choice" in content:
         items = content.split("-")
         statindex = items.index("character choice")
@@ -107,27 +104,18 @@ async def MyCharacter(ctx):
     await ctx.send(f"{ctx.author.name}'s {members[ctx.author.name].showStat()}")
 
 
-#@client.command()
-async def roll_dice(message):
-    content = message.content
-    contentList = content.split(" ")
-    try:
-        num = int(contentList[contentList.index('dice') + 1])
-        repeat = int(contentList[contentList.index('dice') + 2])
+@client.command()
+async def dice(ctx, pips: int, repeat: int):
+    if repeat > 20:
+        raise ValueError('You may only roll up to 20 dice at once')
+    response = '\n'.join(f'Dice Roll: {random.randint(1, pips)}' for _ in range(repeat))
+    await ctx.send(response)
 
-        if repeat > 25:
-            raise ValueError
-    except (IndexError, ValueError):
-        await message.channel.send('Syntax is invalid, try again\n'
-                                   'Valid syntax would look like: "dice <dice number> <number of rolls>"')
-        return
 
-    try:
-        response = '\n'.join(f'Dice Roll: {random.randint(1, num)}' for _ in range(repeat))
-        await message.channel.send(response)
-    except ValueError:
-        await message.channel.send('Syntax is invalid, try again\n'
-                                   'Valid syntax would look like: "dice <dice number> <number of rolls>"')
+@dice.error
+async def dice_error(ctx, error):
+    await ctx.send(("Syntax is invalid, try again.\n"
+                    "You may roll up to 20 dice using the following syntax: `dice <dice number> <number of rolls>`"))
 
 
 @client.command()
