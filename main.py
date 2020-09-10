@@ -6,7 +6,7 @@ from randomTowns import town
 from raceStats import Player
 import races
 
-TOKEN = os.environ['DISCORD_TOKEN']
+TOKEN =
 client = commands.Bot(command_prefix = '.')
 adventurers = {}
 finalRole = {}
@@ -105,8 +105,8 @@ async def on_message(message):
 async def MyCharacter(ctx):
     await ctx.send(f"{ctx.author.name}'s {members[ctx.author.name].showStat()}")
 
-"""
-@client.command()
+
+#@client.command()
 async def roll_dice(message):
     content = message.content
     contentList = content.split(" ")
@@ -127,7 +127,7 @@ async def roll_dice(message):
     except ValueError:
         await message.channel.send('Syntax is invalid, try again\n'
                                    'Valid syntax would look like: "dice <dice number> <number of rolls>"')
-"""
+
 
 @client.command()
 async def viewTownStock(ctx):
