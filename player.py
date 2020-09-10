@@ -24,6 +24,9 @@ class Player:
         self.race = race
         self.apply_race_attributes(race)
 
+    def __str__(self):
+        return(self.race)
+
     def apply_race_attributes(self, race):
         self.size = race.size
         self.speed = race.speed

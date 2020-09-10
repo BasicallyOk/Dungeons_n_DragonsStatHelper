@@ -6,46 +6,46 @@ from randomTowns import town
 from player import Player
 import races
 
-TOKEN = os.getenv('DISCORD_TOKEN')
-client = commands.Bot(command_prefix='.')
-user_players = {}  # Dict from UUIDs to Player objects
+TOKEN =
+client = commands.Bot(command_prefix = '.')
 adventurers = {}
-finalRole = {}
 rolesDes = open("Roles", "r", encoding='utf8')
 roleList = ['🧙', '⚔', '🗡', '🧞', '🎸', '🔮', '🛡', '🪓', '☄', '😇', '🌲', '☯', '🏹', '🃏', '🧠']
 rolelock = False
 readyNum = 0
 members = {}
-
+final_role = {}
 
 @client.event
 async def on_ready():
     print("Campaign has started")
     adventurers.clear()
 
-
 @client.event
 async def on_reaction_add(reaction, user):
+    global final_role
+    global rolelock
     if reaction.message.author != client.user:  # it will only detect emojis directed at its own message
         return
     if user == client.user:  # it wont count itself as an adventurer
         return
-    if reaction.emoji == '✅':
-        if reaction.count == (len(adventurers) + 1) and len(adventurers) != 0:
-            await reaction.message.channel.send(
-                "Role Locked, all party members ready to start.\n"
-                "To set race as well as stats, please send this message: "
-                "Character Choice: <name> <level> <race>(or subrace if applicable) "
-                "<strength> <dexterity> <constitution> <intellect> <wisdom> <charisma>")
-            final_role = adventurers
-            print(final_role)
+
+    if not rolelock:
+        if reaction.emoji == '✅':
+            if reaction.count == (len(adventurers) + 1) and len(adventurers) != 0:
+                await reaction.message.channel.send(
+                    "Role Locked, all party members ready to start.\n"
+                    "To set race as well as stats, please send this message: "
+                    "Character Choice: <name> <level> <race>(or subrace if applicable) "
+                    "<strength> <dexterity> <constitution> <intellect> <wisdom> <charisma>")
+                final_role = adventurers
+                print(final_role)
+                rolelock = True
+                return
+        if user.name in adventurers:
             return
-    if user.name in adventurers:
-        return
-    adventurers[str(user.name)] = reaction.emoji
-    await reaction.message.channel.send(f'{user.name} joined the party as {reaction.emoji}')
-
-
+        adventurers[user.id] = [reaction.emoji]
+        await reaction.message.channel.send(f'{user.name} joined the party as {reaction.emoji}')
 @client.event
 async def on_reaction_remove(reaction, user):
     if reaction.message.author != client.user:
@@ -58,14 +58,13 @@ async def on_reaction_remove(reaction, user):
     del adventurers[user.name]
     await reaction.message.channel.send(f'{user.name} was removed from party')
 
-
 @client.command()
 async def ping(ctx):
     await ctx.send('Whomst has awakened the ancient one')
 
-
 @client.command()
 async def charCreate(ctx):
+    global final_role
     message = await ctx.send("React to this to choose your role.")
     for emoji in roleList:
         await message.add_reaction(emoji)
@@ -73,11 +72,9 @@ async def charCreate(ctx):
     message2 = await ctx.send("React to this to get ready and lock all roles")
     await message2.add_reaction('✅')
 
-
 @client.command()
 async def roles(ctx):
     await ctx.send(rolesDes.read())
-
 
 @client.command()
 async def memberslist(ctx):
@@ -88,7 +85,6 @@ async def memberslist(ctx):
     await ctx.send("Party members list:")
     for x in adventurers:
         await ctx.send(f"{x} as {adventurers[x]}")
-
 
 @client.event
 async def on_message(message):
@@ -102,14 +98,14 @@ async def on_message(message):
 
     content = message.content.lower()
 
+    if "dice" in content:
+        await dice(message)
+
     if "character choice" in content:
         items = content.split("-")
         statindex = items.index("character choice")
         try:
-            members[message.author.name] = Player(items[statindex + 1], int(items[statindex + 2]), items[statindex + 3],
-                                                  int(items[statindex + 4]), int(items[statindex + 5]),
-                                                  int(items[statindex + 6]), int(items[statindex + 7]),
-                                                  int(items[statindex + 8]), int(items[statindex + 9]))
+            members[message.author.name] = Player(items[statindex + 1], int(items[statindex + 2]), items[statindex + 3], int(items[statindex + 4]), int(items[statindex + 5]), int(items[statindex + 6]), int(items[statindex + 7]), int(items[statindex + 8]), int(items[statindex + 9]))
             await message.channel.send(f"Character created for {message.author.name}")
         except:
             await message.channel.send(
@@ -118,10 +114,16 @@ async def on_message(message):
                 "-<strength>-<dexterity>-<constitution>-<intellect>-<wisdom>-<charisma>")
 
 
-@client.command()
-async def MyCharacter(ctx):
-    await ctx.send(f"{ctx.author.name}'s {members[ctx.author.name].showStat()}")
+    if "add weight" in content:
+        items =content.split(' ')
+        add_weight()
 
+@client.command()
+async def myCharacter(ctx):
+    try:
+        await ctx.send(f"{ctx.author.name}'s {final_role[ctx.author.id][0]} {final_role[ctx.author.id][1].showStat()}")
+    except:
+        await ctx.send('Your character might not have been created yet, use charCreate to create one')
 
 @client.command()
 async def dice(ctx, pips: int, repeat: int):
@@ -144,11 +146,9 @@ async def viewTownStock(ctx):
     emojis = ['🔨', '🔮', '⚔', '💎', '👨‍🔬']
     await ctx.send(town.viewStocks(await select_one_from_list(ctx, ctx.message.author, shops, emojis)))
 
-
 @client.command()
 async def viewTownFolks(ctx):
     await ctx.send(town.viewAllShops())
-
 
 async def select_one_from_list(messageable, author, lst, emojis=None):
     """
@@ -191,17 +191,22 @@ async def select_one_from_list(messageable, author, lst, emojis=None):
     selected = lst[emojis.index(str(reaction.emoji))]
     return selected
 
-
 @client.command()
-async def test(ctx):
-    race = await get_race(ctx)
-    name = await get_name(ctx)
+async def raceCreate(ctx):
+    global final_role
+    if rolelock:
+        print('role locked')
+        race = await get_race(ctx)
+        name = await get_name(ctx)
 
-    player = Player(name, 0, race, 0, 0, 0, 0, 0, 0)
-    user_players[ctx.message.author.id] = player
-    print(player.showStat())
-    await ctx.send(player.showStat())
-
+        player = Player(name, 0, race, 0, 0, 0, 0, 0, 0)
+        print(final_role)
+        final_role[ctx.author.id].append(player)
+        print(player.showStat())
+        print(final_role)
+        await ctx.send(f'Character has been created for {ctx.author.name}, use myCharacter to view')
+    else:
+        await ctx.send("Please use charCreate to set a class for yourself and your mates first.")
 
 async def get_race(ctx):
     race_names = [cls.__name__ for cls in races.ALL_RACES]
@@ -215,7 +220,6 @@ async def get_race(ctx):
         subrace = await select_one_from_list(ctx, ctx.message.author, getattr(race_cls, 'subraces'))
     except AttributeError:
         subrace = ""
-
     race = await make_race(ctx, race_cls, subrace)
     return race
 
