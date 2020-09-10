@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 import random
 from randomTowns import town
-from raceStats import Player
+from player import Player
 import races
 
 TOKEN = os.getenv('DISCORD_TOKEN')
