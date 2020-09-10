@@ -6,8 +6,9 @@ from randomTowns import town
 from raceStats import Player
 import races
 
-TOKEN =
-client = commands.Bot(command_prefix = '.')
+TOKEN = os.getenv('DISCORD_TOKEN')
+client = commands.Bot(command_prefix='.')
+user_players = {}  # Dict from UUIDs to Player objects
 adventurers = {}
 finalRole = {}
 rolesDes = open("Roles", "r", encoding='utf8')
@@ -180,8 +181,19 @@ async def select_one_from_list(messageable, author, lst, emojis=None):
     selected = lst[emojis.index(str(reaction.emoji))]
     return selected
 
+
 @client.command()
 async def test(ctx):
+    race = await get_race(ctx)
+    name = await get_name(ctx)
+
+    player = Player(name, 0, race, 0, 0, 0, 0, 0, 0)
+    user_players[ctx.message.author.id] = player
+    print(player.showStat())
+    await ctx.send(player.showStat())
+
+
+async def get_race(ctx):
     race_names = [cls.__name__ for cls in races.ALL_RACES]
     race_name_to_cls = {name: cls for name, cls in zip(race_names, races.ALL_RACES)}
     print(race_names)
@@ -193,11 +205,22 @@ async def test(ctx):
         subrace = await select_one_from_list(ctx, ctx.message.author, getattr(race_cls, 'subraces'))
     except AttributeError:
         subrace = ""
-    race = await make_race(ctx, race_cls, subrace)
 
-    player = Player('luk', 0, race, 0, 0, 0, 0, 0, 0)
-    print(player.showStat())
-    await ctx.send(player.showStat())
+    race = await make_race(ctx, race_cls, subrace)
+    return race
+
+
+async def get_name(ctx):
+    """Prompts for user's name"""
+    await ctx.send("Enter your character's name:")
+    channel = ctx.message.channel
+
+    def check(m: discord.Message):
+        return m.author == ctx.message.author and m.channel == channel
+
+    msg = await client.wait_for('message', check=check)
+    return msg.content
+
 
 async def select_multiple_from_list(messageable, author, lst, emojis=None):
     """
@@ -267,7 +290,7 @@ async def make_race(ctx, race_cls, subrace: str = ""):
     if race_cls == races.Tiefling:
         return races.Tiefling()
 
-    raise ValueError(f'race {race} does not exist')
+    raise ValueError(f'race {race_cls} does not exist')
 
 
 client.run(TOKEN)
