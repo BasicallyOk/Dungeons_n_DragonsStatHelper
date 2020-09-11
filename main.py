@@ -46,6 +46,8 @@ async def on_reaction_add(reaction, user):
             return
         adventurers[user.id] = [reaction.emoji]
         await reaction.message.channel.send(f'{user.name} joined the party as {reaction.emoji}')
+
+
 @client.event
 async def on_reaction_remove(reaction, user):
     if reaction.message.author != client.user:
@@ -113,9 +115,8 @@ async def on_message(message):
                 "Valid Syntax: Character Choice-<name>-<level>-<race>(or subrace if applicable)"
                 "-<strength>-<dexterity>-<constitution>-<intellect>-<wisdom>-<charisma>")
 
-
     if "add weight" in content:
-        items =content.split(' ')
+        items = content.split(' ')
         add_weight()
 
 @client.command()
@@ -207,6 +208,7 @@ async def raceCreate(ctx):
         await ctx.send(f'Character has been created for {ctx.author.name}, use myCharacter to view')
     else:
         await ctx.send("Please use charCreate to set a class for yourself and your mates first.")
+
 
 async def get_race(ctx):
     race_names = [cls.__name__ for cls in races.ALL_RACES]
