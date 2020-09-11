@@ -9,7 +9,6 @@ import pickle
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 client = commands.Bot(command_prefix='.')
-rolesDes = open("Roles", "r", encoding='utf8')
 final_role = {}  # Dict from UUIDs to Player objects
 
 
@@ -26,7 +25,8 @@ async def ping(ctx):
 @client.command()
 @commands.has_role("Dungeon Master")
 async def roles(ctx):
-    await ctx.send(rolesDes.read())
+    with open("Roles", "r", encoding='utf8') as role_descriptions:
+        await ctx.send(role_descriptions.read())
 
 
 @client.command()
@@ -57,6 +57,7 @@ async def on_message(message):
 
 @client.command()
 async def myCharacter(ctx):
+    """Messages the user information about their character"""
     global final_role
     try:
         player = final_role[ctx.author.id]
@@ -67,6 +68,7 @@ async def myCharacter(ctx):
 
 @client.command()
 async def dice(ctx, dice_str: str):
+    """Takes an argument in traditional dice notation (2d6, 3d8, etc.) and returns the result of the rolls"""
     repeat = int(dice_str.split('d')[0])
     pips = int(dice_str.split('d')[1])
 
@@ -120,6 +122,7 @@ async def viewTownFolks(ctx):
 @client.command()
 @commands.has_role("Dungeon Master")
 async def loadGame(ctx):
+    """Unpickles the saved final_role dict"""
     global final_role
     await ctx.send("Loading previous game file")
     try:
@@ -135,6 +138,7 @@ async def loadGame(ctx):
 @client.command()
 @commands.has_role("Dungeon Master")
 async def saveGame(ctx):
+    """Pickles final_role and saves it to a file"""
     await ctx.send("This action will overwrite your party's current save file, do you want to continue? "
                    "Respond with yes or no respond, action will be cancelled in 5 seconds (case sensitive)")
 
@@ -165,6 +169,7 @@ async def newChar(ctx):
 
 
 async def get_race(messageable, author):
+    """Prompts for character's race"""
     race_names = [cls.__name__ for cls in races.ALL_RACES]
     race_name_to_cls = {name: cls for name, cls in zip(race_names, races.ALL_RACES)}
     print(race_names)
@@ -182,7 +187,7 @@ async def get_race(messageable, author):
 
 
 async def get_name(messageable, author):
-    """Prompts for user's name"""
+    """Prompts for character's name"""
     await messageable.send("Enter your character's name:")
 
     def check(m: discord.Message):
