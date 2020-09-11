@@ -7,16 +7,18 @@ from player import Player
 import races
 import pickle
 
-TOKEN =
-client = commands.Bot(command_prefix = '.')
+TOKEN = os.getenv('DISCORD_TOKEN')
+client = commands.Bot(command_prefix='.')
 adventurers = {}
 rolesDes = open("Roles", "r", encoding='utf8')
 members = {}
 final_role = {}  # Dict from UUIDs to Player objects
 
+
 @client.event
 async def on_ready():
     print("Campaign has started")
+
 
 @client.command()
 async def ping(ctx):
@@ -70,6 +72,7 @@ async def on_message(message):
                 "<strength> <dexterity> <constitution> <intellect> <wisdom> <charisma>")
         await message.channel.send("Abilitiy Scores updated")
 
+
 @client.command()
 async def myCharacter(ctx):
     global final_role
@@ -106,14 +109,19 @@ async def add_weight(ctx, weight: int):
     except:
         await ctx.send("Something went horribly wrong, please try again")
 
+
 @client.command()
 async def level_up(ctx):
     global final_role
     try:
         final_role[ctx.author.id].level += 1
-        await ctx.send(f"Congratulations! {ctx.author.name}'s {final_role[ctx.author.id].name} leveled up!\nMake sure you use stat_roll <strength> <dexterity> <constitution> <intellect> <wisdom> <charisma> to determine which abilities will be leveled up (the rest should be specified as 0) ")
+        await ctx.send(f"Congratulations! {ctx.author.name}'s {final_role[ctx.author.id].name} leveled up!\n"
+                       f"Make sure you use stat_roll "
+                       f"<strength> <dexterity> <constitution> <intellect> <wisdom> <charisma> "
+                       f"to determine which abilities will be leveled up (the rest should be specified as 0) ")
     except:
         await ctx.send("Something went horribly wrong, please try again")
+
 
 @client.command()
 async def viewTownStock(ctx):
@@ -126,31 +134,39 @@ async def viewTownStock(ctx):
 async def viewTownFolks(ctx):
     await ctx.send(town.viewAllShops())
 
+
 @client.command()
 @commands.has_role("Dungeon Master")
 async def loadGame(ctx):
     global final_role
     await ctx.send("Loading previous game file")
-    pickle_in = open("save_file", "rb")
-    final_role = pickle.load(pickle_in)
+    try:
+        with open('save_file', 'rb') as pickle_in:
+            final_role = pickle.load(pickle_in)
+        await ctx.send("Load complete. New adventurers can join in at any time using newChar command! Happy adventuring!")
+    except FileNotFoundError:
+        final_role = {}
+        await ctx.send("Game file not found, creating an empty party")
     print(final_role)
-    pickle_in.close()
-    await ctx.send("Load complete. New adventurers can join in at any time using newChar command! Happy adventuring!")
 
 
 @client.command()
 @commands.has_role("Dungeon Master")
 async def saveGame(ctx):
-    await ctx.send("This action will overwrite your party's current save file, do you want to continue? Respond with yes or no respond, action will be cancelled in 5 seconds (case sensitive)")
-    def check(m: discord.Message):
-        return m.content == 'yes' and m.channel == ctx.message.channel
+    await ctx.send("This action will overwrite your party's current save file, do you want to continue? "
+                   "Respond with yes or no respond, action will be cancelled in 5 seconds (case sensitive)")
 
-    msg = await client.wait_for('message', check = check, timeout = 5)
-    if msg:
-        pickle_out = open("save_file", "wb")
-        pickle.dump(final_role, pickle_out)
-        pickle_out.close()
+    def check(m: discord.Message):
+        return m.author == ctx.message.author and m.channel == ctx.message.channel
+
+    msg = await client.wait_for('message', check=check, timeout=5)
+    if msg.content == 'yes':
+        with open('save_file', 'wb') as pickle_out:
+            pickle.dump(final_role, pickle_out)
         await ctx.send("Save complete")
+    else:
+        await ctx.send("Save cancelled")
+
 
 @client.command()
 async def newChar(ctx):
