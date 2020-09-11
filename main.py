@@ -5,20 +5,18 @@ import random
 from randomTowns import town
 from player import Player
 import races
+import pickle
 
-TOKEN = os.getenv('DISCORD_TOKEN')
-client = commands.Bot(command_prefix='.')
+TOKEN =
+client = commands.Bot(command_prefix = '.')
 adventurers = {}
 rolesDes = open("Roles", "r", encoding='utf8')
 members = {}
 final_role = {}  # Dict from UUIDs to Player objects
 
-
 @client.event
 async def on_ready():
     print("Campaign has started")
-    adventurers.clear()
-
 
 @client.command()
 async def ping(ctx):
@@ -43,6 +41,7 @@ async def memberslist(ctx):
 
 @client.event
 async def on_message(message):
+    global final_role
     if message.author == client.user:
         return
 
@@ -53,33 +52,33 @@ async def on_message(message):
 
     content = message.content.lower()
 
-    if "dice" in content:
-        await dice(message)
-
-    if "character choice" in content:
-        items = content.split("-")
-        statindex = items.index("character choice")
+    if "stat_roll" in content:
+        items = content.split(" ")
+        statindex = items.index("stat_roll")
         try:
-            members[message.author.name] = Player(items[statindex + 1], int(items[statindex + 2]), items[statindex + 3], int(items[statindex + 4]), int(items[statindex + 5]), int(items[statindex + 6]), int(items[statindex + 7]), int(items[statindex + 8]), int(items[statindex + 9]))
-            await message.channel.send(f"Character created for {message.author.name}")
+            final_role[message.author.id].strength += int(items[statindex + 1])
+            final_role[message.author.id].dexterity += int(items[statindex + 2])
+            final_role[message.author.id].constitution += int(items[statindex + 3])
+            final_role[message.author.id].intelligence += int(items[statindex + 4])
+            final_role[message.author.id].wisdom += int(items[statindex + 5])
+            final_role[message.author.id].charisma += int(items[statindex + 6])
         except:
             await message.channel.send(
                 "Syntax invalid, please try again.\n"
-                "Valid Syntax: Character Choice-<name>-<level>-<race>(or subrace if applicable)"
-                "-<strength>-<dexterity>-<constitution>-<intellect>-<wisdom>-<charisma>")
-
-    if "add weight" in content:
-        items = content.split(' ')
-        add_weight()
-
+                "Valid Syntax: stat roll "
+                "<strength> <dexterity> <constitution> <intellect> <wisdom> <charisma>")
+        await message.channel.send("Abilitiy Scores updated")
 
 @client.command()
 async def myCharacter(ctx):
-    try:
-        player = final_role[ctx.author.id]
-        await ctx.send(player.showStat())
-    except KeyError:
-        await ctx.send('Your character might not have been created yet, use .newChar to create one')
+    global final_role
+    print(ctx.author.id)
+    print(final_role)
+    #try:
+    player = final_role[ctx.author.id]
+    await ctx.send(player.showStat())
+   # except KeyError:
+        #await ctx.send('Your character might not have been created yet, use .newChar to create one')
 
 
 @client.command()
@@ -101,6 +100,23 @@ async def dice_error(ctx, error):
 
 
 @client.command()
+async def add_weight(ctx, weight: int):
+    global final_role
+    try:
+        await ctx.send(final_role[ctx.author.id].carryweight(weight))
+    except:
+        await ctx.send("Something went horribly wrong, please try again")
+
+@client.command()
+async def level_up(ctx):
+    global final_role
+    try:
+        final_role[ctx.author.id].level += 1
+        await ctx.send(f"Congratulations! {ctx.author.name}'s {final_role[ctx.author.id].name} leveled up!\nMake sure you use stat_roll <strength> <dexterity> <constitution> <intellect> <wisdom> <charisma> to determine which abilities will be leveled up (the rest should be specified as 0) ")
+    except:
+        await ctx.send("Something went horribly wrong, please try again")
+
+@client.command()
 async def viewTownStock(ctx):
     shops = ['Blacksmith', 'Enchanter', 'Magic Weps', 'Jeweler', 'Alchemist']
     emojis = ['🔨', '🔮', '⚔', '💎', '👨‍🔬']
@@ -111,6 +127,29 @@ async def viewTownStock(ctx):
 async def viewTownFolks(ctx):
     await ctx.send(town.viewAllShops())
 
+@client.command()
+async def loadGame(ctx):
+    global final_role
+    await ctx.send("Loading previous game file")
+    pickle_in = open("save_file", "rb")
+    final_role = pickle.load(pickle_in)
+    print(final_role)
+    pickle_in.close()
+    await ctx.send("Load complete. New adventurers can join in at any time using newChar command! Happy adventuring!")
+
+
+@client.command()
+async def saveGame(ctx):
+    await ctx.send("This action will overwrite your party's current save file, do you want to continue? Respond with yes or no respond, action will be cancelled in 5 seconds (case sensitive)")
+    def check(m: discord.Message):
+        return m.content == 'yes' and m.channel == ctx.message.channel
+
+    msg = await client.wait_for('message', check = check, timeout = 5)
+    if msg:
+        pickle_out = open("save_file", "wb")
+        pickle.dump(final_role, pickle_out)
+        pickle_out.close()
+        await ctx.send("Save complete")
 
 @client.command()
 async def newChar(ctx):

@@ -38,7 +38,7 @@ class Player:
 
     def showStat(self):
         return (f'{self.name} the {self.race}\n'
-                f'level {self.level} {self.role}\n'
+                f'Level {self.level} {self.role}\n'
                 f'Movement Speed: {self.speed} ft, Size: {self.size}\n'
                 f'Ability Scores:\n'
                 f'Strength: {self.strength}\n'
@@ -88,6 +88,11 @@ class Player:
                 self.addMoney(-item.price)
         self.inventory[item.name] = item
         return f'Player has successfully added {item.name} to inventory'
+
+    def addWeight(self, weight):
+        self.carryweight += weight
+        if self.carryweight > self.strength * 15:
+            return 'Player lack strength and will be encumbered'
 
 
 
