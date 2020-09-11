@@ -8,14 +8,10 @@ import races
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 client = commands.Bot(command_prefix='.')
-user_players = {}  # Dict from UUIDs to Player objects
 adventurers = {}
 rolesDes = open("Roles", "r", encoding='utf8')
-roleList = ['🧙', '⚔', '🗡', '🧞', '🎸', '🔮', '🛡', '🪓', '☄', '😇', '🌲', '☯', '🏹', '🃏', '🧠']
-rolelock = False
-readyNum = 0
 members = {}
-final_role = {}
+final_role = {}  # Dict from UUIDs to Player objects
 
 
 @client.event
@@ -24,60 +20,9 @@ async def on_ready():
     adventurers.clear()
 
 
-@client.event
-async def on_reaction_add(reaction, user):
-    global final_role
-    global rolelock
-    if reaction.message.author != client.user:  # it will only detect emojis directed at its own message
-        return
-    if user == client.user:  # it wont count itself as an adventurer
-        return
-
-    if not rolelock:
-        if reaction.emoji == '✅':
-            if reaction.count == (len(adventurers) + 1) and len(adventurers) != 0:
-                await reaction.message.channel.send(
-                    "Role Locked, all party members ready to start.\n"
-                    "To set race as well as stats, please send this message: "
-                    "Character Choice: <name> <level> <race>(or subrace if applicable) "
-                    "<strength> <dexterity> <constitution> <intellect> <wisdom> <charisma>")
-                final_role = adventurers
-                print(final_role)
-                rolelock = True
-                return
-        if user.name in adventurers:
-            return
-        adventurers[user.id] = [reaction.emoji]
-        await reaction.message.channel.send(f'{user.name} joined the party as {reaction.emoji}')
-
-
-@client.event
-async def on_reaction_remove(reaction, user):
-    if reaction.message.author != client.user:
-        return
-    if user.name not in adventurers:
-        return
-    if adventurers[user.name] != reaction.emoji:
-        print("adventurer has a different role")
-        return
-    del adventurers[user.name]
-    await reaction.message.channel.send(f'{user.name} was removed from party')
-
-
 @client.command()
 async def ping(ctx):
     await ctx.send('Whomst has awakened the ancient one')
-
-
-@client.command()
-async def charCreate(ctx):
-    global final_role
-    message = await ctx.send("React to this to choose your role.")
-    for emoji in roleList:
-        await message.add_reaction(emoji)
-
-    message2 = await ctx.send("React to this to get ready and lock all roles")
-    await message2.add_reaction('✅')
 
 
 @client.command()
@@ -131,9 +76,10 @@ async def on_message(message):
 @client.command()
 async def myCharacter(ctx):
     try:
-        await ctx.send(f"{ctx.author.name}'s {final_role[ctx.author.id][0]} {final_role[ctx.author.id][1].showStat()}")
-    except:
-        await ctx.send('Your character might not have been created yet, use charCreate to create one')
+        player = final_role[ctx.author.id]
+        await ctx.send(player.showStat())
+    except KeyError:
+        await ctx.send('Your character might not have been created yet, use .newChar to create one')
 
 
 @client.command()
@@ -161,6 +107,89 @@ async def viewTownStock(ctx):
 @client.command()
 async def viewTownFolks(ctx):
     await ctx.send(town.viewAllShops())
+
+
+@client.command()
+async def newChar(ctx):
+    race = await get_race(ctx)
+    role = await get_role(ctx)
+    name = await get_name(ctx)
+
+    player = Player(name, role, 0, race, 0, 0, 0, 0, 0, 0)
+    final_role[ctx.author.id] = player
+    print(player.showStat())
+    await ctx.send(f'Character has been created for {ctx.author.name}, use myCharacter to view')
+
+
+async def get_race(ctx):
+    race_names = [cls.__name__ for cls in races.ALL_RACES]
+    race_name_to_cls = {name: cls for name, cls in zip(race_names, races.ALL_RACES)}
+    print(race_names)
+
+    race_name = await select_one_from_list(ctx, ctx.message.author, race_names)
+    race_cls = race_name_to_cls[race_name]
+    # get subraces if possible
+    try:
+        subrace = await select_one_from_list(ctx, ctx.message.author, getattr(race_cls, 'subraces'))
+    except AttributeError:
+        subrace = ""
+
+    race = await make_race(ctx, race_cls, subrace)
+    return race
+
+
+async def get_name(ctx):
+    """Prompts for user's name"""
+    await ctx.send("Enter your character's name:")
+    channel = ctx.message.channel
+
+    def check(m: discord.Message):
+        return m.author == ctx.message.author and m.channel == channel
+
+    msg = await client.wait_for('message', check=check)
+    return msg.content
+
+
+async def get_role(ctx):
+    """Prompts for character's class"""
+    await ctx.send("Choose your character's class:")
+    roles = [['barbarian', '🪓'],
+             ['bard', '🎸'],
+             ['cleric', '😇'],
+             ['druid', '🌲'],
+             ['fighter', '⚔'],
+             ['monk', '☯'],
+             ['paladin', '🛡'],
+             ['ranger', '🏹'],
+             ['rogue', '🃏'],
+             ['sorcerer', '🔮'],
+             ['warlock', '🧙'],
+             ['wizard', '🧠']]
+    role_names = [r[0].title() for r in roles]
+    role_emojis = [r[1] for r in roles]
+    return await select_one_from_list(ctx, ctx.message.author, role_names, emojis=role_emojis)
+
+
+async def make_race(ctx, race_cls, subrace: str = ""):
+    if race_cls == races.Elf:
+        return races.Elf(subrace)
+    if race_cls == races.Human:
+        return races.Human()
+    if race_cls == races.Dragonborn:
+        return races.Dragonborn(subrace)
+    if race_cls == races.Dwarf:
+        return races.Dwarf(subrace)
+    if race_cls == races.Gnome:
+        # you've been gnomed
+        return races.Gnome(subrace)
+    if race_cls == races.Halfling:
+        return races.Halfling(subrace)
+    if race_cls == races.HalfOrc:
+        return races.HalfOrc()
+    if race_cls == races.Tiefling:
+        return races.Tiefling()
+
+    raise ValueError(f'race {race_cls} does not exist')
 
 
 async def select_one_from_list(messageable, author, lst, emojis=None):
@@ -203,53 +232,6 @@ async def select_one_from_list(messageable, author, lst, emojis=None):
 
     selected = lst[emojis.index(str(reaction.emoji))]
     return selected
-
-
-@client.command()
-async def raceCreate(ctx):
-    global final_role
-    if rolelock:
-        print('role locked')
-        race = await get_race(ctx)
-        name = await get_name(ctx)
-
-        player = Player(name, 0, race, 0, 0, 0, 0, 0, 0)
-        print(final_role)
-        final_role[ctx.author.id].append(player)
-        print(player.showStat())
-        print(final_role)
-        await ctx.send(f'Character has been created for {ctx.author.name}, use myCharacter to view')
-    else:
-        await ctx.send("Please use charCreate to set a class for yourself and your mates first.")
-
-
-async def get_race(ctx):
-    race_names = [cls.__name__ for cls in races.ALL_RACES]
-    race_name_to_cls = {name: cls for name, cls in zip(race_names, races.ALL_RACES)}
-    print(race_names)
-
-    race_name = await select_one_from_list(ctx, ctx.message.author, race_names)
-    race_cls = race_name_to_cls[race_name]
-    # get subraces if possible
-    try:
-        subrace = await select_one_from_list(ctx, ctx.message.author, getattr(race_cls, 'subraces'))
-    except AttributeError:
-        subrace = ""
-
-    race = await make_race(ctx, race_cls, subrace)
-    return race
-
-
-async def get_name(ctx):
-    """Prompts for user's name"""
-    await ctx.send("Enter your character's name:")
-    channel = ctx.message.channel
-
-    def check(m: discord.Message):
-        return m.author == ctx.message.author and m.channel == channel
-
-    msg = await client.wait_for('message', check=check)
-    return msg.content
 
 
 async def select_multiple_from_list(messageable, author, lst, emojis=None):
@@ -299,28 +281,6 @@ async def select_multiple_from_list(messageable, author, lst, emojis=None):
                 selected.append(lst[emojis.index(str(react.emoji))])
 
     return selected
-
-
-async def make_race(ctx, race_cls, subrace: str = ""):
-    if race_cls == races.Elf:
-        return races.Elf(subrace)
-    if race_cls == races.Human:
-        return races.Human()
-    if race_cls == races.Dragonborn:
-        return races.Dragonborn(subrace)
-    if race_cls == races.Dwarf:
-        return races.Dwarf(subrace)
-    if race_cls == races.Gnome:
-        # you've been gnomed
-        return races.Gnome(subrace)
-    if race_cls == races.Halfling:
-        return races.Halfling(subrace)
-    if race_cls == races.HalfOrc:
-        return races.HalfOrc()
-    if race_cls == races.Tiefling:
-        return races.Tiefling()
-
-    raise ValueError(f'race {race_cls} does not exist')
 
 
 client.run(TOKEN)

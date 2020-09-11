@@ -2,11 +2,11 @@ from weaponStats import gear
 
 
 class Player:
-    def __init__(self, name, level: int, race, strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int):
+    def __init__(self, name, role, level: int, race, strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int):
         self.speed = 0
         self.leveling = [0, 2, 4, 6, 8, 11, 14, 17, 20, 24, 28, 32, 36, 41, 46, 51, 56, 62, 68, 74, 80]
         self.size = 0
-        #self.role = role
+        self.role = role
         self.money = 0
         self.carryweight = 0
         self.name = name
@@ -25,7 +25,7 @@ class Player:
         self.apply_race_attributes(race)
 
     def __str__(self):
-        return(self.race)
+        return self.race
 
     def apply_race_attributes(self, race):
         self.size = race.size
@@ -37,7 +37,18 @@ class Player:
             setattr(self, name, getattr(self, name) + change)
 
     def showStat(self):
-        return (f'level {self.level} {self.name}, race: {self.race}\nMovement Speed: {self.speed} ft, Size: {self.size}\nAbility Scores:\nStrength: {self.strength}\nDexterity: {self.dexterity}\nConstitution: {self.constitution}\nIntelligence: {self.intelligence}\nWisdom: {self.wisdom}\nCharisma: {self.charisma}\nAbilities:\n{self.abilityString()}')
+        return (f'{self.name} the {self.race}\n'
+                f'level {self.level} {self.role}\n'
+                f'Movement Speed: {self.speed} ft, Size: {self.size}\n'
+                f'Ability Scores:\n'
+                f'Strength: {self.strength}\n'
+                f'Dexterity: {self.dexterity}\n'
+                f'Constitution: {self.constitution}\n'
+                f'Intelligence: {self.intelligence}\n'
+                f'Wisdom: {self.wisdom}\n'
+                f'Charisma: {self.charisma}\n'
+                f'Abilities:\n'
+                f'{self.abilityString()}')
 
     def abilityString(self):
         return '\n'.join(f'-{ability}' for ability in self.abilities)
