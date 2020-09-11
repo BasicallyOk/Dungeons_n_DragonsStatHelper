@@ -5,7 +5,7 @@ class Race:
         if self.subrace is None:
             return f'{type(self).__name__}'
         else:
-            return f'{type(self).__name__} - {self.subrace}'
+            return f'{type(self).__name__} ({self.subrace})'
 
 class Elf(Race):
     ability_score_changes = {

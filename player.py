@@ -25,7 +25,7 @@ class Player:
         self.apply_race_attributes(race)
 
     def __str__(self):
-        return self.race
+        return f'{self.name} the {self.race} - level {self.level} {self.role}'
 
     def apply_race_attributes(self, race):
         self.size = race.size

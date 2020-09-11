@@ -9,9 +9,7 @@ import pickle
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 client = commands.Bot(command_prefix='.')
-adventurers = {}
 rolesDes = open("Roles", "r", encoding='utf8')
-members = {}
 final_role = {}  # Dict from UUIDs to Player objects
 
 
@@ -33,13 +31,14 @@ async def roles(ctx):
 
 @client.command()
 async def memberslist(ctx):
-    if len(adventurers) == 0:
+    if len(final_role) == 0:
         await ctx.send("Wow, such an empty party. "
                        "Consider joining by sending .charCreate.")
         return
     await ctx.send("Party members list:")
-    for x in adventurers:
-        await ctx.send(f"{x} as {adventurers[x]}")
+    print(final_role)
+    for user_id, player in final_role.items():
+        await ctx.send(f"{client.get_user(user_id)} as {player}")
 
 
 @client.event
