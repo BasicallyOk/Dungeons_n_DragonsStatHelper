@@ -6,8 +6,9 @@ from randomTowns import town
 from player import Player
 import races
 
-TOKEN =
-client = commands.Bot(command_prefix = '.')
+TOKEN = os.getenv('DISCORD_TOKEN')
+client = commands.Bot(command_prefix='.')
+user_players = {}  # Dict from UUIDs to Player objects
 adventurers = {}
 rolesDes = open("Roles", "r", encoding='utf8')
 roleList = ['🧙', '⚔', '🗡', '🧞', '🎸', '🔮', '🛡', '🪓', '☄', '😇', '🌲', '☯', '🏹', '🃏', '🧠']
@@ -16,10 +17,12 @@ readyNum = 0
 members = {}
 final_role = {}
 
+
 @client.event
 async def on_ready():
     print("Campaign has started")
     adventurers.clear()
+
 
 @client.event
 async def on_reaction_add(reaction, user):
@@ -46,6 +49,8 @@ async def on_reaction_add(reaction, user):
             return
         adventurers[user.id] = [reaction.emoji]
         await reaction.message.channel.send(f'{user.name} joined the party as {reaction.emoji}')
+
+
 @client.event
 async def on_reaction_remove(reaction, user):
     if reaction.message.author != client.user:
@@ -58,9 +63,11 @@ async def on_reaction_remove(reaction, user):
     del adventurers[user.name]
     await reaction.message.channel.send(f'{user.name} was removed from party')
 
+
 @client.command()
 async def ping(ctx):
     await ctx.send('Whomst has awakened the ancient one')
+
 
 @client.command()
 async def charCreate(ctx):
@@ -72,9 +79,11 @@ async def charCreate(ctx):
     message2 = await ctx.send("React to this to get ready and lock all roles")
     await message2.add_reaction('✅')
 
+
 @client.command()
 async def roles(ctx):
     await ctx.send(rolesDes.read())
+
 
 @client.command()
 async def memberslist(ctx):
@@ -85,6 +94,7 @@ async def memberslist(ctx):
     await ctx.send("Party members list:")
     for x in adventurers:
         await ctx.send(f"{x} as {adventurers[x]}")
+
 
 @client.event
 async def on_message(message):
@@ -113,10 +123,10 @@ async def on_message(message):
                 "Valid Syntax: Character Choice-<name>-<level>-<race>(or subrace if applicable)"
                 "-<strength>-<dexterity>-<constitution>-<intellect>-<wisdom>-<charisma>")
 
-
     if "add weight" in content:
-        items =content.split(' ')
+        items = content.split(' ')
         add_weight()
+
 
 @client.command()
 async def myCharacter(ctx):
@@ -124,6 +134,7 @@ async def myCharacter(ctx):
         await ctx.send(f"{ctx.author.name}'s {final_role[ctx.author.id][0]} {final_role[ctx.author.id][1].showStat()}")
     except:
         await ctx.send('Your character might not have been created yet, use charCreate to create one')
+
 
 @client.command()
 async def dice(ctx, pips: int, repeat: int):
@@ -146,9 +157,11 @@ async def viewTownStock(ctx):
     emojis = ['🔨', '🔮', '⚔', '💎', '👨‍🔬']
     await ctx.send(town.viewStocks(await select_one_from_list(ctx, ctx.message.author, shops, emojis)))
 
+
 @client.command()
 async def viewTownFolks(ctx):
     await ctx.send(town.viewAllShops())
+
 
 async def select_one_from_list(messageable, author, lst, emojis=None):
     """
@@ -191,6 +204,7 @@ async def select_one_from_list(messageable, author, lst, emojis=None):
     selected = lst[emojis.index(str(reaction.emoji))]
     return selected
 
+
 @client.command()
 async def raceCreate(ctx):
     global final_role
@@ -208,6 +222,7 @@ async def raceCreate(ctx):
     else:
         await ctx.send("Please use charCreate to set a class for yourself and your mates first.")
 
+
 async def get_race(ctx):
     race_names = [cls.__name__ for cls in races.ALL_RACES]
     race_name_to_cls = {name: cls for name, cls in zip(race_names, races.ALL_RACES)}
@@ -220,6 +235,7 @@ async def get_race(ctx):
         subrace = await select_one_from_list(ctx, ctx.message.author, getattr(race_cls, 'subraces'))
     except AttributeError:
         subrace = ""
+
     race = await make_race(ctx, race_cls, subrace)
     return race
 
