@@ -24,6 +24,7 @@ async def ping(ctx):
 
 
 @client.command()
+@commands.has_role("Dungeon Master")
 async def roles(ctx):
     await ctx.send(rolesDes.read())
 
@@ -72,13 +73,11 @@ async def on_message(message):
 @client.command()
 async def myCharacter(ctx):
     global final_role
-    print(ctx.author.id)
-    print(final_role)
-    #try:
-    player = final_role[ctx.author.id]
-    await ctx.send(player.showStat())
-   # except KeyError:
-        #await ctx.send('Your character might not have been created yet, use .newChar to create one')
+    try:
+        player = final_role[ctx.author.id]
+        await client.get_user(ctx.author.id).send(player.showStat())
+    except KeyError:
+        await ctx.send('Your character might not have been created yet, use .newChar to create one')
 
 
 @client.command()
@@ -128,6 +127,7 @@ async def viewTownFolks(ctx):
     await ctx.send(town.viewAllShops())
 
 @client.command()
+@commands.has_role("Dungeon Master")
 async def loadGame(ctx):
     global final_role
     await ctx.send("Loading previous game file")
@@ -139,6 +139,7 @@ async def loadGame(ctx):
 
 
 @client.command()
+@commands.has_role("Dungeon Master")
 async def saveGame(ctx):
     await ctx.send("This action will overwrite your party's current save file, do you want to continue? Respond with yes or no respond, action will be cancelled in 5 seconds (case sensitive)")
     def check(m: discord.Message):
