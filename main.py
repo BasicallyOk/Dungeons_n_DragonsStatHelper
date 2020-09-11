@@ -83,7 +83,10 @@ async def myCharacter(ctx):
 
 
 @client.command()
-async def dice(ctx, pips: int, repeat: int):
+async def dice(ctx, dice_str: str):
+    repeat = int(dice_str.split('d')[0])
+    pips = int(dice_str.split('d')[1])
+
     if repeat > 20:
         raise ValueError('You may only roll up to 20 dice at once')
     response = '\n'.join(f'Dice Roll: {random.randint(1, pips)}' for _ in range(repeat))
@@ -94,7 +97,7 @@ async def dice(ctx, pips: int, repeat: int):
 async def dice_error(ctx, error):
     await ctx.send(
         "Syntax is invalid, try again.\n"
-        "You may roll up to 20 dice using the following syntax: `dice <dice number> <number of rolls>`")
+        "You may roll up to 20 dice using the following syntax: `dice <number of rolls>d<dice number>`")
 
 
 @client.command()
