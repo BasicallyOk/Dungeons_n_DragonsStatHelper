@@ -55,23 +55,6 @@ async def on_message(message):
 
     content = message.content.lower()
 
-    if "stat_roll" in content:
-        items = content.split(" ")
-        statindex = items.index("stat_roll")
-        try:
-            final_role[message.author.id].strength += int(items[statindex + 1])
-            final_role[message.author.id].dexterity += int(items[statindex + 2])
-            final_role[message.author.id].constitution += int(items[statindex + 3])
-            final_role[message.author.id].intelligence += int(items[statindex + 4])
-            final_role[message.author.id].wisdom += int(items[statindex + 5])
-            final_role[message.author.id].charisma += int(items[statindex + 6])
-        except:
-            await message.channel.send(
-                "Syntax invalid, please try again.\n"
-                "Valid Syntax: stat roll "
-                "<strength> <dexterity> <constitution> <intellect> <wisdom> <charisma>")
-        await message.channel.send("Abilitiy Scores updated")
-
 
 @client.command()
 async def myCharacter(ctx):
@@ -173,8 +156,9 @@ async def newChar(ctx):
     race = await get_race(ctx)
     role = await get_role(ctx)
     name = await get_name(ctx)
+    ability_scores = await get_ability_scores(ctx)
 
-    player = Player(name, role, 0, race, 0, 0, 0, 0, 0, 0)
+    player = Player(name, role, 0, race, *ability_scores)
     final_role[ctx.author.id] = player
     print(player.showStat())
     await ctx.send(f'Character has been created for {ctx.author.name}, use myCharacter to view')
@@ -227,6 +211,18 @@ async def get_role(ctx):
     role_names = [r[0].title() for r in roles]
     role_emojis = [r[1] for r in roles]
     return await select_one_from_list(ctx, ctx.message.author, role_names, emojis=role_emojis)
+
+
+async def get_ability_scores(ctx):
+    await ctx.send("Enter your ability scores separated by spaces:")
+    channel = ctx.message.channel
+
+    def check(m: discord.Message):
+        return m.author == ctx.message.author and m.channel == channel
+
+    msg = await client.wait_for('message', check=check)
+    ability_scores = [int(s) for s in msg.content.split(' ')]
+    return ability_scores
 
 
 async def make_race(ctx, race_cls, subrace: str = ""):
