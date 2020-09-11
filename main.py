@@ -153,49 +153,49 @@ async def saveGame(ctx):
 
 @client.command()
 async def newChar(ctx):
-    race = await get_race(ctx)
-    role = await get_role(ctx)
-    name = await get_name(ctx)
-    ability_scores = await get_ability_scores(ctx)
+    user = ctx.author
+    race = await get_race(user, user)
+    role = await get_role(user, user)
+    name = await get_name(user, user)
+    ability_scores = await get_ability_scores(user, user)
 
     player = Player(name, role, 0, race, *ability_scores)
-    final_role[ctx.author.id] = player
+    final_role[user.id] = player
     print(player.showStat())
-    await ctx.send(f'Character has been created for {ctx.author.name}, use myCharacter to view')
+    await user.send(f'Character has been created for {user.name}, use myCharacter to view')
 
 
-async def get_race(ctx):
+async def get_race(messageable, author):
     race_names = [cls.__name__ for cls in races.ALL_RACES]
     race_name_to_cls = {name: cls for name, cls in zip(race_names, races.ALL_RACES)}
     print(race_names)
 
-    race_name = await select_one_from_list(ctx, ctx.message.author, race_names)
+    race_name = await select_one_from_list(messageable, author, race_names)
     race_cls = race_name_to_cls[race_name]
     # get subraces if possible
     try:
-        subrace = await select_one_from_list(ctx, ctx.message.author, getattr(race_cls, 'subraces'))
+        subrace = await select_one_from_list(messageable, author, getattr(race_cls, 'subraces'))
     except AttributeError:
         subrace = ""
 
-    race = await make_race(ctx, race_cls, subrace)
+    race = await make_race(messageable, race_cls, subrace)
     return race
 
 
-async def get_name(ctx):
+async def get_name(messageable, author):
     """Prompts for user's name"""
-    await ctx.send("Enter your character's name:")
-    channel = ctx.message.channel
+    await messageable.send("Enter your character's name:")
 
     def check(m: discord.Message):
-        return m.author == ctx.message.author and m.channel == channel
+        return m.author == author
 
     msg = await client.wait_for('message', check=check)
     return msg.content
 
 
-async def get_role(ctx):
+async def get_role(messageable, author):
     """Prompts for character's class"""
-    await ctx.send("Choose your character's class:")
+    await messageable.send("Choose your character's class:")
     roles = [['barbarian', '🪓'],
              ['bard', '🎸'],
              ['cleric', '😇'],
@@ -210,15 +210,14 @@ async def get_role(ctx):
              ['wizard', '🧠']]
     role_names = [r[0].title() for r in roles]
     role_emojis = [r[1] for r in roles]
-    return await select_one_from_list(ctx, ctx.message.author, role_names, emojis=role_emojis)
+    return await select_one_from_list(messageable, author, role_names, emojis=role_emojis)
 
 
-async def get_ability_scores(ctx):
-    await ctx.send("Enter your ability scores separated by spaces:")
-    channel = ctx.message.channel
+async def get_ability_scores(messageable, author):
+    await messageable.send("Enter your ability scores separated by spaces:")
 
     def check(m: discord.Message):
-        return m.author == ctx.message.author and m.channel == channel
+        return m.author == author
 
     msg = await client.wait_for('message', check=check)
     ability_scores = [int(s) for s in msg.content.split(' ')]
