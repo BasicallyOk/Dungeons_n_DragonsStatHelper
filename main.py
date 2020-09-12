@@ -159,10 +159,11 @@ async def newChar(ctx):
     user = ctx.author
     race = await get_race(user, user)
     role = await get_role(user, user)
+    level = await get_level(user, user)
     name = await get_name(user, user)
     ability_scores = await get_ability_scores(user, user)
 
-    player = Player(name, role, 0, race, *ability_scores)
+    player = Player(name, role, level, race, *ability_scores)
     final_role[user.id] = player
     print(player.showStat())
     await user.send(f'Character has been created for {user.name}, use myCharacter to view')
@@ -215,6 +216,17 @@ async def get_role(messageable, author):
     role_names = [r[0].title() for r in roles]
     role_emojis = [r[1] for r in roles]
     return await select_one_from_list(messageable, author, role_names, emojis=role_emojis)
+
+
+async def get_level(messageable, author):
+    await messageable.send("Enter the level of your class:")
+    msg = await client.wait_for('message')
+    level = int(msg.content)
+
+    if level < 1:
+        raise ValueError('level cannot be lower than 1.')
+
+    return level
 
 
 async def get_ability_scores(messageable, author):
