@@ -7,8 +7,11 @@ from player import Player
 import races
 import pickle
 
-TOKEN = os.getenv('DISCORD_TOKEN')
-client = commands.Bot(command_prefix='.')
+TOKEN =
+client = commands.Bot(command_prefix = '.')
+adventurers = {}
+rolesDes = open("Roles", "r", encoding='utf8')
+members = {}
 final_role = {}  # Dict from UUIDs to Player objects
 
 
@@ -19,7 +22,7 @@ async def on_ready():
 
 @client.command()
 async def ping(ctx):
-    await ctx.send('Whomst has awakened the ancient one')
+    await ctx.send('Whomst hast awakened the ancient one')
 
 
 @client.command()
@@ -74,7 +77,8 @@ async def dice(ctx, dice_str: str):
 
     if repeat > 20:
         raise ValueError('You may only roll up to 20 dice at once')
-    response = '\n'.join(f'Dice Roll: {random.randint(1, pips)}' for _ in range(repeat))
+    response = '\n'.join(f'Dice Roll: {random.randint(1, pips)}\n' for _ in range(repeat))
+    print("Dice class")
     await ctx.send(response)
 
 
@@ -167,6 +171,57 @@ async def newChar(ctx):
     final_role[user.id] = player
     print(player.showStat())
     await user.send(f'Character has been created for {user.name}, use myCharacter to view')
+
+@client.command()
+async def stat_roller(ctx):
+    stats = [['💪', 'Strength'],
+             ['🃏', 'Dexterity'],
+             ['🏃', 'Constitution'],
+             ['📖', 'Intelligence'],
+             ['🧠', 'Wisdom'],
+             ['💬', 'Charisma']]
+
+    statName = [r[1] for r in stats]
+    statEmoji = [r[0] for r in stats]
+    message = '\n'.join(f'{statEmoji[i]}: {statName[i]}' for i in range(6))
+    await ctx.send(f"React to the following 4d6 rolls (lowest will be omitted) with the corresponding emojis (This decision is final):"
+                   f"{message}")
+    results = []
+    messageable = []
+    choice = []
+    for j in range(6):
+        rolls = []
+        for x in range(4):
+            rolls.append(random.randint(1, 6))
+        await sort(rolls)
+        results.append(rolls[1] + rolls[2] + rolls[3])
+        messageable.append(await ctx.send(f'Roll: {rolls[1]} + {rolls[2]} + {rolls[3]} = {rolls[1] + rolls[2] + rolls[3]} (omitted {rolls[0]} )'))
+
+    for y in range(0, 6):
+        print(messageable)
+        choice.append(await(select_one_from_list(ctx, ctx.author, statName, statEmoji, messageable[y])))
+        print(choice[y])
+
+    try:
+        final_role[ctx.author.id].strength += results[choice.index('Strength')]
+        final_role[ctx.author.id].dexterity += results[choice.index('Dexterity')]
+        final_role[ctx.author.id].constitution += results[choice.index('Constitution')]
+        final_role[ctx.author.id].intelligence += results[choice.index('Intelligence')]
+        final_role[ctx.author.id].wisdom += results[choice.index('Wisdom')]
+        final_role[ctx.author.id].charisma += results[choice.index('Charisma')]
+
+        await ctx.send (final_role[ctx.author.id].showStat())
+    except KeyError:
+        await ctx.send("Your character has not been created yet, please do so with newChar command")
+
+
+async def sort(list):
+    for iter_num in range(len(list) - 1, 0, -1):
+        for idx in range(iter_num):
+            if list[idx] > list[idx + 1]:
+                temp = list[idx]
+                list[idx] = list[idx + 1]
+                list[idx + 1] = temp
 
 
 async def get_race(messageable, author):
@@ -262,7 +317,7 @@ async def make_race(ctx, race_cls, subrace: str = ""):
     raise ValueError(f'race {race_cls} does not exist')
 
 
-async def select_one_from_list(messageable, author, lst, emojis=None):
+async def select_one_from_list(messageable, author, lst, emojis=None, selection_message = None):
     """
     Lets a discord user select an item from a list using reactions.
     Returns the selected item.
@@ -284,11 +339,12 @@ async def select_one_from_list(messageable, author, lst, emojis=None):
     if len(lst) != len(emojis):
         raise ValueError(f'Lengths of lst and emojis are not equal ({len(lst)} != {len(emojis)})')
 
-    # concatenate each line into a single message before sending
-    messages = []
-    for emoji, item in zip(emojis, lst):
-        messages.append(f'{emoji} {item}')
-    selection_message = await messageable.send('\n'.join(messages))
+    if selection_message is None:
+        # concatenate each line into a single message before sending
+        messages = []
+        for emoji, item in zip(emojis, lst):
+            messages.append(f'{emoji} {item}')
+        selection_message = await messageable.send('\n'.join(messages))
 
     # react with one emoji for each item
     for emoji in emojis:
