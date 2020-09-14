@@ -64,7 +64,7 @@ class Dragonborn(Race):
         'constitution': 0,
         'intelligence': 0,
         'wisdom': 0,
-        'charisma': 0
+        'charisma': 1
     }
     size = 'medium'
     speed = 30
