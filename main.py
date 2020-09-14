@@ -8,7 +8,7 @@ import races
 import pickle
 
 TOKEN =
-client = commands.Bot(command_prefix = '.')
+client = commands.Bot(command_prefix = 'd.')
 adventurers = {}
 rolesDes = open("Roles", "r", encoding='utf8')
 members = {}
@@ -73,12 +73,14 @@ async def myCharacter(ctx):
 async def dice(ctx, dice_str: str):
     """Takes an argument in traditional dice notation (2d6, 3d8, etc.) and returns the result of the rolls"""
     repeat = int(dice_str.split('d')[0])
-    pips = int(dice_str.split('d')[1])
-
+    pips = int(dice_str.split('d')[1].split('+')[0])
+    try:
+        bonus = int(dice_str.split('d')[1].split('+')[1])
+    except:
+        bonus = 0
     if repeat > 20:
         raise ValueError('You may only roll up to 20 dice at once')
-    response = '\n'.join(f'Dice Roll: {random.randint(1, pips)}\n' for _ in range(repeat))
-    print("Dice class")
+    response = '\n'.join(f'Dice Roll: {random.randint(1, pips)+bonus} (Added bonus of {bonus})\n' for _ in range(repeat))
     await ctx.send(response)
 
 
@@ -86,7 +88,7 @@ async def dice(ctx, dice_str: str):
 async def dice_error(ctx, error):
     await ctx.send(
         "Syntax is invalid, try again.\n"
-        "You may roll up to 20 dice using the following syntax: `dice <number of rolls>d<dice number>`")
+        "You may roll up to 20 dice using the following syntax: `dice <number of rolls>d<dice number>+<bonus>`")
 
 
 @client.command()
@@ -124,7 +126,7 @@ async def viewTownFolks(ctx):
 
 
 @client.command()
-@commands.has_role("Dungeon Master")
+@commands.has_role("Sutoriman-sensei")
 async def loadGame(ctx):
     """Unpickles the saved final_role dict"""
     global final_role
@@ -140,7 +142,7 @@ async def loadGame(ctx):
 
 
 @client.command()
-@commands.has_role("Dungeon Master")
+@commands.has_role("Sutoriman-sensei")
 async def saveGame(ctx):
     """Pickles final_role and saves it to a file"""
     await ctx.send("This action will overwrite your party's current save file, do you want to continue? "

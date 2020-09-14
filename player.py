@@ -4,7 +4,8 @@ from weaponStats import gear
 class Player:
     def __init__(self, name, role, level: int, race, strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int):
         self.speed = 0
-        self.leveling = [0, 2, 4, 6, 8, 11, 14, 17, 20, 24, 28, 32, 36, 41, 46, 51, 56, 62, 68, 74, 80]
+        #self.leveling = [0, 2, 4, 6, 8, 11, 14, 17, 20, 24, 28, 32, 36, 41, 46, 51, 56, 62, 68, 74, 80]
+        self.leveling = [2, 2, 2, 2, 3, 3, 3, 8, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6]
         self.size = 0
         self.role = role
         self.money = 0
@@ -39,6 +40,7 @@ class Player:
     def showStat(self):
         return (f'{self.name} the {self.race}\n'
                 f'Level {self.level} {self.role}\n'
+                f'Proficiency Bonus: +{self.proficiency}\n'
                 f'Movement Speed: {self.speed} ft, Size: {self.size}\n'
                 f'Ability Scores:\n'
                 f'Strength: {self.strength}\n'
